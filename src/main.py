@@ -20,10 +20,7 @@ def test(forest, svm, vectorizer, test_tweets, test_labels):
     count = 0
     for idx, result in enumerate(resultSVM):
         if result == test_labels[idx]:
-            # print result, classes[idx]
             count = count + 1
-        # else:
-            # print list_test[idx]
 
     print count
     print len(resultSVM)
@@ -31,10 +28,7 @@ def test(forest, svm, vectorizer, test_tweets, test_labels):
     count = 0
     for idx, result in enumerate(resultRF):
         if result == test_labels[idx]:
-            # print result, classes[idx]
             count = count + 1
-        # else:
-        #     print list_test[idx]
 
     print count
     print len(resultRF)
@@ -52,7 +46,6 @@ if __name__ == "__main__":
     train_labels = []
     for tweet in tweets:
         tokenized_tweets.append(ut.tokenize(tweet.content, tweet.polarity))
-        # labels.append(tweet.polarity)
 
     count = 0
     test_tweets = []
@@ -77,18 +70,14 @@ if __name__ == "__main__":
     print len(test_tweets)
     print len(train_tweets)
 
-    print test_tweets
+        # clean_tweets.append(tweet['clean'])
+        # labels.append(tweet['class'])
 
-    print bow.stopwords
+    train_tweets = np.hstack(train_tweets)
 
-    #     # clean_tweets.append(tweet['clean'])
-    #     # labels.append(tweet['class'])
-    #
-    # train_tweets = np.hstack(train_tweets)
-    #
-    # dictionary, tweets_features, vectorizer = bow.bow(train_tweets)
-    #
-    # forest = clf.classifier_randomForest(tweets_features, train_labels)
-    # svm = clf.classifier_svm(tweets_features, train_labels)
-    #
-    # test(forest, svm, vectorizer, test_tweets, test_labels)
+    dictionary, tweets_features, vectorizer = bow.bow(train_tweets)
+
+    forest = clf.classifier_randomForest(tweets_features, train_labels)
+    svm = clf.classifier_svm(tweets_features, train_labels)
+
+    test(forest, svm, vectorizer, test_tweets, test_labels)

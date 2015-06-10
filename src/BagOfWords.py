@@ -3,8 +3,6 @@ __author__ = 'Iosu'
 from sklearn.feature_extraction.text import CountVectorizer
 import numpy as np
 
-
-
 stopwords = set(
     ['?l', '?sta', '?stas', '?ste', '?stos', '?ltima', '?ltimas', '?ltimo', '?ltimos', 'a', 'a?adi?', 'a?n',
      'actualmente', 'adelante', 'adem?s', 'afirm?', 'agreg?', 'ah?', 'ahora', 'al', 'alg?n', 'algo', 'alguna',
