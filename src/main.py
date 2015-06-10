@@ -58,6 +58,13 @@ if __name__ == "__main__":
     test_tweets = []
     train_tweets = []
 
+    # total_tweets = []
+    # total_labels = []
+    #
+    # for tweet in tokenized_tweets:
+    #     total_tweets.append(tweet['clean'])
+    #     total_labels.append(tweet['class'])
+
     for tweet in tokenized_tweets:
         if (count <= len(tweets) / 5):
             test_tweets.append(tweet['clean'])
@@ -70,14 +77,18 @@ if __name__ == "__main__":
     print len(test_tweets)
     print len(train_tweets)
 
-        # clean_tweets.append(tweet['clean'])
-        # labels.append(tweet['class'])
+    print test_tweets
 
-    train_tweets = np.hstack(train_tweets)
+    print bow.stopwords
 
-    dictionary, tweets_features, vectorizer = bow.bow(train_tweets)
-
-    forest = clf.classifier_randomForest(tweets_features, train_labels)
-    svm = clf.classifier_svm(tweets_features, train_labels)
-
-    test(forest, svm, vectorizer, test_tweets, test_labels)
+    #     # clean_tweets.append(tweet['clean'])
+    #     # labels.append(tweet['class'])
+    #
+    # train_tweets = np.hstack(train_tweets)
+    #
+    # dictionary, tweets_features, vectorizer = bow.bow(train_tweets)
+    #
+    # forest = clf.classifier_randomForest(tweets_features, train_labels)
+    # svm = clf.classifier_svm(tweets_features, train_labels)
+    #
+    # test(forest, svm, vectorizer, test_tweets, test_labels)
