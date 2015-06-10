@@ -1,7 +1,6 @@
 __author__ = 'Iosu'
 
 import re
-from static import *
 
 
 def tokenize(original_text, label):
@@ -90,21 +89,8 @@ def tokenize(original_text, label):
                     new_word = ''
                 words.append(word)
 
-        # stemmer = nltk.stem.PorterStemmer()
-
-        stemmed = [stemmer.stem(word) for word in words]
-
-        # check if a curse was split into 2 words
-        i = 0
-        while i < len(words) - 1:
-            if words[i] + words[i + 1] in stemmed_curse_words:
-                words[i : i + 2] = [words[i] + words[i + 1]]
-            else:
-                i += 1
-
         return {'original': original_text,
             'words': words,
-            'stemmed': stemmed,
             'ratio': ratio,
             'clean': clean_text,
             'class': label}

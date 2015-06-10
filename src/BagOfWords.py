@@ -3,6 +3,8 @@ __author__ = 'Iosu'
 from sklearn.feature_extraction.text import CountVectorizer
 import numpy as np
 
+
+
 stopwords = set(
     ['un', 'una', 'unas', 'unos', 'uno', 'sobre', 'todo', 'tambi?n', 'tras', 'otro', 'alg?n', 'alguno', 'alguna',
      'algunos', 'algunas', 'ser', 'es', 'soy', 'eres', 'somos', 'sois', 'estoy', 'esta', 'estamos', 'estais', 'estan',
@@ -22,7 +24,7 @@ stopwords = set(
      'aquel'])
 
 def bow(list_of_words):
-    print list_of_words
+    # print list_of_words
     print "Creating the bag of words...\n"
     # from sklearn.feature_extraction.text import CountVectorizer
     #

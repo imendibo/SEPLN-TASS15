@@ -3,7 +3,6 @@ __author__ = 'Iosu'
 import xml.etree.ElementTree as ET
 import Tweet as tw
 
-
 def readXML(xmlFIle):
     tree = ET.parse(xmlFIle)
     root = tree.getroot()
