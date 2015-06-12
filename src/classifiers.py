@@ -1,7 +1,7 @@
 __author__ = 'Iosu'
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import svm
-from sklearn.multiclass import OneVsRestClassifier
+from sklearn.multiclass import OneVsRestClassifier as OvsA
 
 def classifier_randomForest(features, labels):
     print "Training the random forest..."
