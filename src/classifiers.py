@@ -1,7 +1,7 @@
 __author__ = 'Iosu'
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import svm
-from sklearn.multiclass import OneVsRestClassifier
+from sklearn.multiclass import OneVsRestClassifier as OvsA
 
 def classifier_randomForest(features, labels):
     print "Training the random forest..."
@@ -24,6 +24,4 @@ def onevsall(tweets_features, train_labels):
     clf_ova.fit(tweets_features, train_labels)
     return clf_ova
 
-    #Iosu's shit
-    # ova = OneVsRestClassifier(svm.LinearSVC(random_state=0)).fit(tweets_features, train_labels)
-    # return ova
+
