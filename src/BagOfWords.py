@@ -43,7 +43,8 @@ def bow(list_of_words):
     # # Initialize the "CountVectorizer" object, which is scikit-learn's
     # # bag of words tool.
 
-    vectorizer = CountVectorizer(analyzer = "word",   \
+    vectorizer = CountVectorizer(analyzer = "char", \
+                                 ngram_range=[1,3],     \
                                  tokenizer = None,    \
                                  preprocessor = None, \
                                  stop_words = stopwords,   \
@@ -84,6 +85,6 @@ def bow(list_of_words):
         # print count, tag
 
     dictionary = sorted(dictionary, key=lambda x: x[1])
-
+    print dictionary
 
     return dictionary, train_data_features, vectorizer
