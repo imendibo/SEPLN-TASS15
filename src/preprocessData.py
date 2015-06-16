@@ -1,7 +1,7 @@
 __author__ = 'Iosu'
 
 import re
-
+from sklearn.lda import LDA
 
 def tokenize(original_text, label):
         caps = sum([1 for ch in original_text if 'A' <= ch <= 'Z'])
@@ -94,4 +94,9 @@ def tokenize(original_text, label):
             'ratio': ratio,
             'clean': clean_text,
             'class': label}
+
+
+def dimensionality_reduction(data_set):
+    return data_set
+
 

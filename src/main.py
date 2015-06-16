@@ -66,14 +66,9 @@ if __name__ == "__main__":
     # total_tweets.append(tweet['clean'])
     # total_labels.append(tweet['class'])
 
-    for tweet in tokenized_tweets:
-        if count <= len(tweets) / 5:
-            test_tweets.append(tweet['clean'])
-            test_labels.append(tweet['class'])
-        else:
-            train_tweets.append(tweet['clean'])
-            train_labels.append(tweet['class'])
-        count += 1
+
+    partition = 5
+    train_tweets, train_labels, test_tweets, test_labels = ut.partition_data(tokenized_tweets, partition)
 
     print len(test_tweets)
     print len(train_tweets)
