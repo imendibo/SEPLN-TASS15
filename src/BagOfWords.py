@@ -35,6 +35,7 @@ stopwords = ['?l', '?sta', '?stas', '?ste', '?stos', '?ltima', '?ltimas', '?ltim
              'todos', 'total', 'tras', 'trata', 'trav?s', 'tres', 'tuvo', 'un', 'una', 'unas', 'uno', 'unos', 'usted',
              'va', 'vamos', 'van', 'varias', 'varios', 'veces', 'ver', 'vez', 'y', 'ya', 'yo']
 
+
 def bow(list_of_words):
     # print list_of_words
     print "Creating the bag of words...\n"
@@ -43,12 +44,12 @@ def bow(list_of_words):
     # # Initialize the "CountVectorizer" object, which is scikit-learn's
     # # bag of words tool.
 
-    vectorizer = CountVectorizer(analyzer = "char", \
-                                 ngram_range=[1,3],     \
-                                 tokenizer = None,    \
-                                 preprocessor = None, \
-                                 stop_words = stopwords,   \
-                                 max_features = 5000)
+    vectorizer = CountVectorizer(analyzer="word", \
+                                 # ngram_range=[1, 3], \
+                                 tokenizer=None, \
+                                 preprocessor=None, \
+                                 stop_words=stopwords, \
+                                 max_features=5000)
 
     # fit_transform() does two functions: First, it fits the model
     # and learns the vocabulary; second, it transforms our training data
