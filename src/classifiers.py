@@ -2,6 +2,8 @@ __author__ = 'Iosu'
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import svm
 from sklearn.multiclass import OneVsRestClassifier as OvsA
+from multilayer_perceptron import MLPClassifier as MLP
+
 
 def classifier_randomForest(features, labels):
     print "Training the random forest..."
@@ -14,14 +16,23 @@ def classifier_randomForest(features, labels):
     forest = forest.fit(features, labels)
     return forest
 
+
 def classifier_svm(features, labels):
     clf_svm = svm.LinearSVC()
     clf_svm.fit(features, labels)
     return clf_svm
 
-def onevsall(tweets_features, train_labels):
-    clf_ova = OvsA(svm.SVC(random_state=0))
+
+def onevsall(tweets_features, train_labels, estimator):
+    clf_ova = OvsA(estimator)
     clf_ova.fit(tweets_features, train_labels)
     return clf_ova
+
+
+def multilayer_perceptron(tweet_features, train_labels):
+    clf_mlp = MLP(n_hidden=100)
+    clf_mlp.fit(tweet_features, train_labels)
+    return clf_mlp
+
 
 
