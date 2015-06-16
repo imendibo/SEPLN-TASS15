@@ -50,21 +50,9 @@ if __name__ == "__main__":
     tweets = xml.readXML(xmlTrainFile)
 
     tokenized_tweets = []
-    test_labels = []
-    train_labels = []
     for tweet in tweets:
         tokenized_tweets.append(ut.tokenize(tweet.content, tweet.polarity))
 
-    count = 0
-    test_tweets = []
-    train_tweets = []
-
-    # total_tweets = []
-    # total_labels = []
-    #
-    # for tweet in tokenized_tweets:
-    # total_tweets.append(tweet['clean'])
-    # total_labels.append(tweet['class'])
 
 
     partition = 5
@@ -72,11 +60,6 @@ if __name__ == "__main__":
 
     print len(test_tweets)
     print len(train_tweets)
-
-    # for t in train_tweets:
-    # print t.encode('ascii', 'replace')
-    # clean_tweets.append(tweet['clean'])
-    # labels.append(tweet['class'])
 
     train_tweets = np.hstack(train_tweets)
     dictionary, tweets_features, vectorizer = bow.bow(train_tweets)

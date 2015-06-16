@@ -94,8 +94,13 @@ def tokenize(original_text, label):
 
 
 def partition_data(tokenized_tweets, partition):
+    count = 0
+    test_tweets = []
+    train_tweets = []
+    test_labels = []
+    train_labels = []
     for tweet in tokenized_tweets:
-        if count <= len(tweets) / partition:
+        if count <= len(tokenized_tweets) / partition:
             test_tweets.append(tweet['clean'])
             test_labels.append(tweet['class'])
         else:
