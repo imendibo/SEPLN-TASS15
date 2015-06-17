@@ -53,8 +53,8 @@ if __name__ == "__main__":
     pred = vectorizer.transform(test_tweets)
     pred = pred.toarray()
     print pred
-    # test(forest, pred, test_labels, estimator_name='one versus all RF')
-    test(svm, pred, test_labels, estimator_name='one versus all SVM')
+    test(forest, pred, test_labels, estimator_name='one versus all RF')
+    # test(svm, pred, test_labels, estimator_name='one versus all SVM')
     # test(mlp, pred, test_labels, estimator_name='one versus all MLP')
     # test(oneVSall_svm, pred, test_labels, estimator_name='one versus all SVM')
     # test(oneVSall_mlp, pred, test_labels, estimator_name='one versus all MLP')
