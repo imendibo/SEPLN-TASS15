@@ -47,14 +47,14 @@ def bow(list_of_words, vec='Unknown'):
 
     if(vec.__eq__('tfidf')):
         vectorizer = TfidfVectorizer(analyzer = "char", \
-                                     ngram_range=[3,4],     \
+                                     ngram_range=[2,3],     \
                                      tokenizer = None,    \
                                      preprocessor = None, \
                                      stop_words = stopwords,   \
                                      max_features = 5000)
     else:
         vectorizer = CountVectorizer(analyzer = "char", \
-                                     ngram_range=[3,4],     \
+                                     ngram_range=[2,3],     \
                                      tokenizer = None,    \
                                      preprocessor = None, \
                                      stop_words = stopwords,   \

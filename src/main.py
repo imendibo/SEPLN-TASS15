@@ -35,16 +35,27 @@ if __name__ == "__main__":
 
     train_tweets = np.hstack(train_tweets)
     dictionary, tweets_features, vectorizer = bow.bow(train_tweets, vec="tfidf")
+    # dictionary, tweets_features, vectorizer = bow.bow(train_tweets, vec="count")
 
     # print dictionary
     #
 
+    '''Dimsionality reduction'''
+    # FEATURE SELECTION
+    from sklearn.feature_selection import SelectKBest
+    from sklearn.feature_selection import chi2
+
+    print tweets_features.shape
+
+    # tweets_features = SelectKBest(chi2, k=4500).fit_transform(tweets_features, train_labels)
+
+    print tweets_features.shape
 
     '''
     Training different classifiers.
     '''
-    # forest = clf.classifier_randomForest(tweets_features, train_labels)
-    svm = clf.classifier_svm(tweets_features, train_labels)
+    forest = clf.classifier_randomForest(tweets_features, train_labels)
+    # svm = clf.classifier_svm(tweets_features, train_labels)
     # mlp = clf.multilayer_perceptron(tweets_features, train_labels)
 
     # ONE VS ALL CLASSIFIER WITH DIFFERENT ESTIMATORS.
@@ -65,10 +76,12 @@ if __name__ == "__main__":
     pred = vectorizer.transform(test_tweets)
     pred = pred.toarray()
 
+    # pred = SelectKBest(chi2, k=4500).fit_transform(pred, test_labels)
+
 
     print pred
-    # test(forest, pred, test_labels, estimator_name='RF')
-    test(svm, pred, test_labels, estimator_name='SVM')
+    test(forest, pred, test_labels, estimator_name='RF')
+    # test(svm, pred, test_labels, estimator_name='SVM')
     # test(mlp, pred, test_labels, estimator_name='MLP')
     # test(oneVSall_svm, pred, test_labels, estimator_name='one versus all SVM')
     # test(oneVSall_mlp, pred, test_labels, estimator_name='one versus all MLP')
