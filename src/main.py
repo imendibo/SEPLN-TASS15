@@ -7,14 +7,14 @@ import BagOfWords as bow
 import classifiers as clf
 
 
-def test(estimator, pred, test_labels, estimator_name='Unknown'):
-    resultOvsA = estimator.predict(pred)
+def test(estimator, train_set, test_labels, estimator_name='Unknown'):
+    result = estimator.predict(train_set)
 
-    aux = resultOvsA == test_labels
+    aux = result == test_labels
     correct = sum(aux.astype(int))
     print correct
-    print len(pred)
-    print estimator_name, ': ' + str((correct * 100) / len(pred))
+    print len(train_set)
+    print estimator_name, ': ' + str((correct * 100) / len(train_set))
 
 
 if __name__ == "__main__":
