@@ -9,7 +9,7 @@ def classifier_randomForest(features, labels):
     print "Training the random forest..."
 
     # Initialize a Random Forest classifier with 100 trees
-    forest = RandomForestClassifier(n_estimators=50)
+    forest = RandomForestClassifier(n_estimators=100)
 
     # Fit the forest to the training set, using the bag of words as
     # features and the sentiment labels as the response variable
