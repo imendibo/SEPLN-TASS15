@@ -1,6 +1,7 @@
 __author__ = 'Iosu'
 
 from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import TfidfVectorizer
 import numpy as np
 
 stopwords = ['?l', '?sta', '?stas', '?ste', '?stos', '?ltima', '?ltimas', '?ltimo', '?ltimos', 'a', 'a?adi?', 'a?n',
@@ -36,20 +37,28 @@ stopwords = ['?l', '?sta', '?stas', '?ste', '?stos', '?ltima', '?ltimas', '?ltim
              'va', 'vamos', 'van', 'varias', 'varios', 'veces', 'ver', 'vez', 'y', 'ya', 'yo']
 
 
-def bow(list_of_words):
+def bow(list_of_words, vec='Unknown'):
     # print list_of_words
     print "Creating the bag of words...\n"
-    # from sklearn.feature_extraction.text import CountVectorizer
-    #
-    # # Initialize the "CountVectorizer" object, which is scikit-learn's
-    # # bag of words tool.
 
-    vectorizer = CountVectorizer(analyzer = "char", \
-                                 ngram_range=[2,3],     \
-                                 tokenizer = None,    \
-                                 preprocessor = None, \
-                                 stop_words = stopwords,   \
-                                 max_features = 5000)
+    #
+    # Initialize the "CountVectorizer" object, which is scikit-learn's
+    # bag of words tool.
+
+    if(vec.__eq__('tfidf')):
+        vectorizer = TfidfVectorizer(analyzer = "char", \
+                                     ngram_range=[3,4],     \
+                                     tokenizer = None,    \
+                                     preprocessor = None, \
+                                     stop_words = stopwords,   \
+                                     max_features = 5000)
+    else:
+        vectorizer = CountVectorizer(analyzer = "char", \
+                                     ngram_range=[3,4],     \
+                                     tokenizer = None,    \
+                                     preprocessor = None, \
+                                     stop_words = stopwords,   \
+                                     max_features = 5000)
 
 
     # fit_transform() does two functions: First, it fits the model
@@ -87,6 +96,5 @@ def bow(list_of_words):
         # print count, tag
 
     dictionary = sorted(dictionary, key=lambda x: x[1])
-    print dictionary
 
     return dictionary, train_data_features, vectorizer
