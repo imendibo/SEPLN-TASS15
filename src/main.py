@@ -75,6 +75,7 @@ if __name__ == "__main__":
 
     pred = vectorizer.transform(test_tweets)
     pred = pred.toarray()
+<<<<<<< HEAD
 
     # pred = SelectKBest(chi2, k=4500).fit_transform(pred, test_labels)
 
@@ -82,6 +83,12 @@ if __name__ == "__main__":
     print pred
     test(forest, pred, test_labels, estimator_name='RF')
     # test(svm, pred, test_labels, estimator_name='SVM')
+=======
+    print pred
+
+    # test(forest, pred, test_labels, estimator_name='RF')
+    test(svm, pred, test_labels, estimator_name='SVM')
+>>>>>>> origin/master
     # test(mlp, pred, test_labels, estimator_name='MLP')
     # test(oneVSall_svm, pred, test_labels, estimator_name='one versus all SVM')
     # test(oneVSall_mlp, pred, test_labels, estimator_name='one versus all MLP')
