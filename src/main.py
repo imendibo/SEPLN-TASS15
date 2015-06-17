@@ -7,18 +7,14 @@ import BagOfWords as bow
 import classifiers as clf
 
 
-def test(estimator, vectorizer, pred, test_labels, estimator_name='Unknown'):
-    # mlp, forest, svm,
-
+def test(estimator, pred, test_labels, estimator_name='Unknown'):
     resultOvsA = estimator.predict(pred)
-    count = 0
-    for idx, result in enumerate(resultOvsA):
-        if result == test_labels[idx]:
-            count += 1
 
-    print count
+    aux = resultOvsA == test_labels
+    correct = sum(aux.astype(int))
+    print correct
     print len(pred)
-    print estimator_name, ': ' + str((count * 100) / len(pred))
+    print estimator_name, ': ' + str((correct * 100) / len(pred))
 
 
 if __name__ == "__main__":
@@ -57,9 +53,9 @@ if __name__ == "__main__":
     pred = vectorizer.transform(test_tweets)
     pred = pred.toarray()
     print pred
-    # test(forest, vectorizer, pred, test_labels, estimator_name='one versus all RF')
-    # test(svm, vectorizer, pred, test_labels, estimator_name='one versus all SVM')
-    # test(mlp, vectorizer, pred, test_labels, estimator_name='one versus all MLP')
-    # test(oneVSall_svm, vectorizer, pred, test_labels, estimator_name='one versus all SVM')
-    # test(oneVSall_mlp, vectorizer, pred, test_labels, estimator_name='one versus all MLP')
-    test(oneVSall_rf, vectorizer, pred, test_labels, estimator_name='one versus all RF')
+    # test(forest, pred, test_labels, estimator_name='one versus all RF')
+    test(svm, pred, test_labels, estimator_name='one versus all SVM')
+    # test(mlp, pred, test_labels, estimator_name='one versus all MLP')
+    # test(oneVSall_svm, pred, test_labels, estimator_name='one versus all SVM')
+    # test(oneVSall_mlp, pred, test_labels, estimator_name='one versus all MLP')
+    # test(oneVSall_rf, pred, test_labels, estimator_name='one versus all RF')
