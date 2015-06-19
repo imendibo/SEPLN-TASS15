@@ -46,15 +46,15 @@ def bow(list_of_words, vec='Unknown'):
     # bag of words tool.
 
     if(vec.__eq__('tfidf')):
-        vectorizer = TfidfVectorizer(analyzer = "char", \
-                                     ngram_range=[2,3],     \
+        vectorizer = TfidfVectorizer(analyzer = "word", \
+                                     ngram_range=[1,2],     \
                                      tokenizer = None,    \
                                      preprocessor = None, \
                                      stop_words = stopwords,   \
                                      max_features = 5000)
     else:
-        vectorizer = CountVectorizer(analyzer = "char", \
-                                     ngram_range=[2,3],     \
+        vectorizer = CountVectorizer(analyzer = "word", \
+                                     ngram_range=[1,2],     \
                                      tokenizer = None,    \
                                      preprocessor = None, \
                                      stop_words = stopwords,   \

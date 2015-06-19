@@ -3,7 +3,8 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn import svm
 from sklearn.multiclass import OneVsRestClassifier as OvsA
 from multilayer_perceptron import MLPClassifier as MLP
-
+from sklearn.lda import LDA
+from sklearn import linear_model
 
 def classifier_randomForest(features, labels):
     print "Training the random forest..."
@@ -36,3 +37,14 @@ def multilayer_perceptron(tweet_features, train_labels):
 
 
 
+def lda(tweet_features, train_labels):
+    clf = LDA()
+    clf.fit(tweet_features, train_labels)
+
+    return clf
+
+def logistic_regression(tweet_features, train_labels):
+    logreg = linear_model.LogisticRegression()
+    logreg.fit(tweet_features, train_labels)
+
+    return logreg

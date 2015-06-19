@@ -6,16 +6,18 @@ import numpy as np
 import BagOfWords as bow
 import classifiers as clf
 
+import matplotlib.pyplot as plt
 
 def test(estimator, test_set, test_labels, estimator_name='Unknown'):
 
     result = estimator.predict(test_set)
+    print result
 
     aux = result == test_labels
     correct = sum(aux.astype(int))
-    print correct
-    print len(test_set)
-    print estimator_name, ': ' + str((correct * 100) / len(test_set))
+
+    print estimator_name, ': Accuracy = ' + str((correct * 100) / len(test_set))+"% ("+ str(correct)+"/"+str(len(test_set))+")"
+
 
 
 if __name__ == "__main__":
@@ -34,29 +36,25 @@ if __name__ == "__main__":
     print len(train_tweets)
 
     train_tweets = np.hstack(train_tweets)
-    dictionary, tweets_features, vectorizer = bow.bow(train_tweets, vec="tfidf")
-    # dictionary, tweets_features, vectorizer = bow.bow(train_tweets, vec="count")
+    # dictionary, tweets_features, vectorizer = bow.bow(train_tweets, vec="tfidf")
+    dictionary, tweets_features, vectorizer = bow.bow(train_tweets, vec="count")
 
     # print dictionary
-    #
 
     '''Dimsionality reduction'''
-    # FEATURE SELECTION
-    from sklearn.feature_selection import SelectKBest
-    from sklearn.feature_selection import chi2
-
-    print tweets_features.shape
-
-    # tweets_features = SelectKBest(chi2, k=4500).fit_transform(tweets_features, train_labels)
-
+    # LDA
+    # lda = clf.lda(tweets_features, train_labels)
     print tweets_features.shape
 
     '''
     Training different classifiers.
     '''
     forest = clf.classifier_randomForest(tweets_features, train_labels)
-    # svm = clf.classifier_svm(tweets_features, train_labels)
+    svm = clf.classifier_svm(tweets_features, train_labels)
     # mlp = clf.multilayer_perceptron(tweets_features, train_labels)
+
+
+    # lr = clf.logistic_regression(tweets_features, train_labels)
 
     # ONE VS ALL CLASSIFIER WITH DIFFERENT ESTIMATORS.
     # estimator = clf.svm.SVC(random_state=0)
@@ -67,7 +65,6 @@ if __name__ == "__main__":
     #
     # estimator = clf.RandomForestClassifier(n_estimators=50)
     # oneVSall_rf = clf.onevsall(tweets_features, train_labels, estimator)
-
 
     '''
     Test the different classifiers with the test tweets.
@@ -80,8 +77,12 @@ if __name__ == "__main__":
 
 
     print pred
+
+    # test(lda, pred, test_labels, estimator_name='LDA')
+    # test(lr, pred, test_labels, estimator_name='Logistic regression')
+
     test(forest, pred, test_labels, estimator_name='RF')
-    # test(svm, pred, test_labels, estimator_name='SVM')
+    test(svm, pred, test_labels, estimator_name='SVM')
 
     # test(mlp, pred, test_labels, estimator_name='MLP')
     # test(oneVSall_svm, pred, test_labels, estimator_name='one versus all SVM')

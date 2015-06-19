@@ -15,6 +15,7 @@ def readXML(xmlFIle):
         sentiments = tweet.find('sentiments')
         polarity = sentiments[0].find('value').text
 
+        polarity = polarityTagging(polarity)
 
         #Other info:
         tweet_id = long(tweet.find('tweetid').text)
@@ -28,3 +29,20 @@ def readXML(xmlFIle):
             tweets.append(tweet)
 
     return tweets
+
+def polarityTagging(polarity):
+    if(polarity.__eq__('NONE')):
+        polarity = 0
+    elif(polarity.__eq__('N+')):
+        polarity = 1
+    elif(polarity.__eq__('N')):
+        polarity = 2
+    elif(polarity.__eq__('NEU')):
+        polarity = 3
+    elif(polarity.__eq__('P')):
+        polarity = 4
+    elif(polarity.__eq__('P+')):
+        polarity = 5
+
+    return polarity
+
