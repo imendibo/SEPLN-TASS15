@@ -108,3 +108,32 @@ def partition_data(tokenized_tweets, partition):
             train_labels.append(tweet['class'])
         count += 1
     return train_tweets, train_labels, test_tweets, test_labels
+
+import sklearn.cross_validation as cv
+
+def crossValidation(tweets, labels, partition):
+    count = 0
+    test_tweets = []
+    train_tweets = []
+    test_labels = []
+    train_labels = []
+
+
+    # train_tweets, test_tweets, train_labels, test_labels = cv.train_test_split(tweets, labels, test_size=1/float(partition), random_state=0)
+
+
+    kf = cv.KFold(n=len(tweets), n_folds=3, shuffle=True, indices=False)
+
+    for train, test in kf:
+        X_train, X_test, y_train, y_test = tweets[train], tweets[test], labels[train], labels[test]
+
+        print train, test
+    # for tweet in tokenized_tweets:
+    #     if count <= len(tokenized_tweets) / partition:
+    #         test_tweets.append(tweet['clean'])
+    #         test_labels.append(tweet['class'])
+    #     else:
+    #         train_tweets.append(tweet['clean'])
+    #         train_labels.append(tweet['class'])
+    #     count += 1
+    return train_tweets, test_tweets, train_labels, test_labels
