@@ -4,6 +4,7 @@ import numpy as np
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import f1_score
 from sklearn.metrics import precision_recall_fscore_support
+import sklearn.cross_validation as cv
 
 
 def tokenize(original_text, label):
@@ -161,3 +162,31 @@ def get_measures_for_each_class(expected, predicted):
     # plot_confusion_matrix(cm_normalized, title='Normalized confusion matrix')
     #
     # plt.show()
+
+
+def crossValidation(tweets, labels, partition):
+    count = 0
+    test_tweets = []
+    train_tweets = []
+    test_labels = []
+    train_labels = []
+
+
+    # train_tweets, test_tweets, train_labels, test_labels = cv.train_test_split(tweets, labels, test_size=1/float(partition), random_state=0)
+
+
+    kf = cv.KFold(n=len(tweets), n_folds=3, shuffle=True, indices=False)
+
+    for train, test in kf:
+        X_train, X_test, y_train, y_test = tweets[train], tweets[test], labels[train], labels[test]
+
+        print train, test
+    # for tweet in tokenized_tweets:
+    #     if count <= len(tokenized_tweets) / partition:
+    #         test_tweets.append(tweet['clean'])
+    #         test_labels.append(tweet['class'])
+    #     else:
+    #         train_tweets.append(tweet['clean'])
+    #         train_labels.append(tweet['class'])
+    #     count += 1
+    return train_tweets, test_tweets, train_labels, test_labels
