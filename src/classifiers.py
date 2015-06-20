@@ -18,6 +18,7 @@ def classifier_randomForest(features, labels):
     return forest
 
 
+
 def classifier_svm(features, labels):
     clf_svm = svm.LinearSVC()
     clf_svm.fit(features, labels)

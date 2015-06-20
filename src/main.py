@@ -8,16 +8,26 @@ import classifiers as clf
 
 import matplotlib.pyplot as plt
 
-def test(estimator, test_set, test_labels, estimator_name='Unknown'):
 
+def test(estimator, test_set, test_labels, estimator_name='Unknown'):
     result = estimator.predict(test_set)
     print result
 
     aux = result == test_labels
     correct = sum(aux.astype(int))
 
-    print estimator_name, ': Accuracy = ' + str((correct * 100) / len(test_set))+"% ("+ str(correct)+"/"+str(len(test_set))+")"
+    print estimator_name, ': Accuracy = ' + str((correct * 100) / len(test_set)) + "% (" + str(correct) + "/" + str(
+        len(test_set)) + ")"
 
+    cm = ut.get_confusion_matrix(test_labels, result)
+
+    f1_measure = ut.get_f1_measure(test_labels, result)
+    _precision, _recall, _f1score, _support = ut.get_measures_for_each_class(test_labels, result)
+
+    print 'Average Precision:\t', _precision
+    print 'Average Recall:\t', _recall
+    print 'Average F1 Measure:\t', _f1score
+    print '\n'
 
 
 if __name__ == "__main__":
@@ -49,7 +59,7 @@ if __name__ == "__main__":
     '''
     Training different classifiers.
     '''
-    forest = clf.classifier_randomForest(tweets_features, train_labels)
+    # forest = clf.classifier_randomForest(tweets_features, train_labels)
     svm = clf.classifier_svm(tweets_features, train_labels)
     # mlp = clf.multilayer_perceptron(tweets_features, train_labels)
 
@@ -81,7 +91,7 @@ if __name__ == "__main__":
     # test(lda, pred, test_labels, estimator_name='LDA')
     # test(lr, pred, test_labels, estimator_name='Logistic regression')
 
-    test(forest, pred, test_labels, estimator_name='RF')
+    # test(forest, pred, test_labels, estimator_name='RF')
     test(svm, pred, test_labels, estimator_name='SVM')
 
     # test(mlp, pred, test_labels, estimator_name='MLP')
