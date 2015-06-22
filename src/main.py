@@ -54,6 +54,7 @@ if __name__ == "__main__":
     kf = cv.KFold(n=len(tweets), n_folds=3, shuffle=True, indices=False)
 
     for train, test in kf:
+        print "Fold "
         train = np.array(train)
         test = np.array(test)
         tweets = np.array(tweets)
@@ -63,12 +64,12 @@ if __name__ == "__main__":
         train_tweets, test_tweets, train_labels, test_labels = tweets[train], tweets[test], labels[train], labels[test]
         # train_tweets, train_labels, test_tweets, test_labels = ut.partition_data(tokenized_tweets, partition)
 
-        print len(test_tweets)
-        print len(train_tweets)
+        # print len(test_tweets)
+        # print len(train_tweets)
 
         train_tweets = np.hstack(train_tweets)
-        # dictionary, tweets_features, vectorizer = bow.bow(train_tweets, vec="tfidf")
-        dictionary, tweets_features, vectorizer = bow.bow(train_tweets, vec="count")
+        dictionary, tweets_features, vectorizer = bow.bow(train_tweets, vec="tfidf")
+        # dictionary, tweets_features, vectorizer = bow.bow(train_tweets, vec="count")
 
         # print dictionary
 
@@ -80,10 +81,10 @@ if __name__ == "__main__":
         '''
         Training different classifiers.
         '''
-        forest = clf.classifier_randomForest(tweets_features, train_labels)
-        svm = clf.classifier_svm(tweets_features, train_labels)
+        # forest = clf.classifier_randomForest(tweets_features, train_labels)
+        # svm = clf.classifier_svm(tweets_features, train_labels)
         # mlp = clf.multilayer_perceptron(tweets_features, train_labels)
-
+        ada = clf.adaboost(tweets_features, train_labels)
 
         # lr = clf.logistic_regression(tweets_features, train_labels)
 
@@ -106,14 +107,14 @@ if __name__ == "__main__":
 
         # pred = SelectKBest(chi2, k=4500).fit_transform(pred, test_labels)
 
-
         print pred
 
         # evaluateResults(lda, pred, test_labels, estimator_name='LDA')
         # evaluateResults(lr, pred, test_labels, estimator_name='Logistic regression')
 
-        evaluateResults(forest, pred, test_labels, estimator_name='RF')
-        evaluateResults(svm, pred, test_labels, estimator_name='SVM')
+        # evaluateResults(forest, pred, test_labels, estimator_name='RF')
+        # evaluateResults(svm, pred, test_labels, estimator_name='SVM')
+        evaluateResults(ada, pred, test_labels, estimator_name='ADABOOST')
 
 
         # evaluateResults(mlp, pred, test_labels, estimator_name='MLP')
