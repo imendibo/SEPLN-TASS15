@@ -66,7 +66,7 @@ if __name__ == "__main__":
     partition = 5
     # train_tweets, test_tweets, train_labels, test_labels = ut.crossValidation(tweets, labels, partition)
 
-    kf = cv.KFold(n=len(tweets), n_folds=1, shuffle=True, indices=False)
+    kf = cv.KFold(n=len(tweets), n_folds=3, shuffle=True, indices=False)
 
     accuracyLR,  precisionLR,  recallLR,  f_measureLR =  [],[],[],[]
     accuracyRF,  precisionRF,  recallRF,  f_measureRF =  [],[],[],[]
@@ -87,8 +87,8 @@ if __name__ == "__main__":
         train_tweets, test_tweets, train_labels, test_labels = tweets[train], tweets[test], labels[train], labels[test]
         # train_tweets, train_labels, test_tweets, test_labels = ut.partition_data(tokenized_tweets, partition)
 
-        # print len(test_tweets)
-        # print len(train_tweets)
+        print len(test_tweets)
+        print len(train_tweets)
 
         train_tweets = np.hstack(train_tweets)
         dictionary, tweets_features, vectorizer = bow.bow(train_tweets, vec="tfidf")
