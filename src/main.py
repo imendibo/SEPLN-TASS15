@@ -106,7 +106,6 @@ if __name__ == "__main__":
 
         # pred = SelectKBest(chi2, k=4500).fit_transform(pred, test_labels)
 
-
         print pred
 
         # evaluateResults(lda, pred, test_labels, estimator_name='LDA')
@@ -114,7 +113,6 @@ if __name__ == "__main__":
 
         evaluateResults(forest, pred, test_labels, estimator_name='RF')
         evaluateResults(svm, pred, test_labels, estimator_name='SVM')
-
 
         # evaluateResults(mlp, pred, test_labels, estimator_name='MLP')
         # evaluateResults(oneVSall_svm, pred, test_labels, estimator_name='one versus all SVM')

@@ -18,7 +18,6 @@ def classifier_randomForest(features, labels):
     return forest
 
 
-
 def classifier_svm(features, labels):
     clf_svm = svm.LinearSVC()
     clf_svm.fit(features, labels)
@@ -37,15 +36,13 @@ def multilayer_perceptron(tweet_features, train_labels):
     return clf_mlp
 
 
-
 def lda(tweet_features, train_labels):
     clf = LDA()
     clf.fit(tweet_features, train_labels)
-
     return clf
+
 
 def logistic_regression(tweet_features, train_labels):
     logreg = linear_model.LogisticRegression()
     logreg.fit(tweet_features, train_labels)
-
     return logreg
