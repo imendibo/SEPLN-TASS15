@@ -10,27 +10,41 @@ import sklearn.cross_validation as cv
 import matplotlib.pyplot as plt
 
 
-def evaluateResults(estimator, test_set, test_labels, estimator_name='Unknown'):
+def printResults(accuracy, precision, recall, f_measure, name="Unknown"):
+
+    print "Result of "+name+":"
+    print "Accuracy: ", sum(accuracy)/float(len(accuracy))
+    print "Precision: ", sum(precision)/float(len(precision))
+    print "Recall: ", sum(recall)/float(len(recall))
+    print "F1-measure: ", sum(f_measure)/float(len(f_measure))
+
+def evaluateResults(estimator, test_set, test_labels, accuracy,  precision,  recall, f_measure, estimator_name='Unknown'):
 
     result = estimator.predict(test_set)
-    print result
+    # print result
 
     aux = result == test_labels
     correct = sum(aux.astype(int))
+    _accuracy = (correct * 100) / len(test_set)
 
-    print estimator_name, ': Accuracy = ' + str((correct * 100) / len(test_set)) + "% (" + str(correct) + "/" + str(
-        len(test_set)) + ")"
+    # print estimator_name, ': Accuracy = ' + str((correct * 100) / len(test_set)) + "% (" + str(correct) + "/" + str(len(test_set)) + ")"
 
     cm = ut.get_confusion_matrix(test_labels, result)
 
     f1_measure = ut.get_f1_measure(test_labels, result)
     _precision, _recall, _f1score, _support = ut.get_measures_for_each_class(test_labels, result)
 
-    print 'Average Precision:\t', _precision
-    print 'Average Recall:\t', _recall
-    print 'Average F1 Measure:\t', _f1score
-    print '\n'
+    accuracy.append(_accuracy)
+    precision.append(_precision)
+    recall.append(_recall)
+    f_measure.append(_f1score)
 
+    # print 'Average Precision:\t', _precision
+    # print 'Average Recall:\t', _recall
+    # print 'Average F1 Measure:\t', _f1score
+    # print '\n'
+
+    return accuracy, precision, recall, f_measure
 
 
 if __name__ == "__main__":
@@ -53,8 +67,16 @@ if __name__ == "__main__":
 
     kf = cv.KFold(n=len(tweets), n_folds=3, shuffle=True, indices=False)
 
+    accuracyLR,  precisionLR,  recallLR,  f_measureLR =  [],[],[],[]
+    accuracyRF,  precisionRF,  recallRF,  f_measureRF =  [],[],[],[]
+    accuracySVM, precisionSVM, recallSVM, f_measureSVM = [],[],[],[]
+    accuracyADA, precisionADA, recallADA, f_measureADA = [],[],[],[]
+    accuracyMLP, precisionMLP, recallMLP, f_measureMLP = [],[],[],[]
+    accuracyOVASVM, precisionOVASVM, recallOVASVM, f_measureOVASVM = [],[],[],[]
+    accuracyOVARF, precisionOVARF, recallOVARF, f_measureOVARF = [],[],[],[]
+
     for train, test in kf:
-        print "Fold "
+        # print "Fold "
         train = np.array(train)
         test = np.array(test)
         tweets = np.array(tweets)
@@ -76,27 +98,26 @@ if __name__ == "__main__":
         '''Dimsionality reduction'''
         # LDA
         # lda = clf.lda(tweets_features, train_labels)
-        print tweets_features.shape
+        # print tweets_features.shape
 
         '''
         Training different classifiers.
         '''
-        # forest = clf.classifier_randomForest(tweets_features, train_labels)
-        # svm = clf.classifier_svm(tweets_features, train_labels)
-        # mlp = clf.multilayer_perceptron(tweets_features, train_labels)
+        forest = clf.classifier_randomForest(tweets_features, train_labels)
+        svm = clf.classifier_svm(tweets_features, train_labels)
+        mlp = clf.multilayer_perceptron(tweets_features, train_labels)
         ada = clf.adaboost(tweets_features, train_labels)
-
-        # lr = clf.logistic_regression(tweets_features, train_labels)
+        lr = clf.logistic_regression(tweets_features, train_labels)
 
         # ONE VS ALL CLASSIFIER WITH DIFFERENT ESTIMATORS.
-        # estimator = clf.svm.SVC(random_state=0)
-        # oneVSall_svm = clf.onevsall(tweets_features, train_labels, estimator)
+        estimator = clf.svm.SVC(random_state=0)
+        oneVSall_svm = clf.onevsall(tweets_features, train_labels, estimator)
         #
         # estimator = clf.MLP()
         # oneVSall_mlp = clf.onevsall(tweets_features, train_labels, estimator)
         #
-        # estimator = clf.RandomForestClassifier(n_estimators=50)
-        # oneVSall_rf = clf.onevsall(tweets_features, train_labels, estimator)
+        estimator = clf.RandomForestClassifier(n_estimators=50)
+        oneVSall_rf = clf.onevsall(tweets_features, train_labels, estimator)
 
         '''
         Test the different classifiers with the test tweets.
@@ -107,17 +128,27 @@ if __name__ == "__main__":
 
         # pred = SelectKBest(chi2, k=4500).fit_transform(pred, test_labels)
 
-        print pred
+        # print pred
 
         # evaluateResults(lda, pred, test_labels, estimator_name='LDA')
-        # evaluateResults(lr, pred, test_labels, estimator_name='Logistic regression')
-
-        # evaluateResults(forest, pred, test_labels, estimator_name='RF')
-        # evaluateResults(svm, pred, test_labels, estimator_name='SVM')
-        evaluateResults(ada, pred, test_labels, estimator_name='ADABOOST')
 
 
-        # evaluateResults(mlp, pred, test_labels, estimator_name='MLP')
-        # evaluateResults(oneVSall_svm, pred, test_labels, estimator_name='one versus all SVM')
+        accuracyLR,  precisionLR,  recallLR,  f_measureLR =  evaluateResults(lr,     pred, test_labels, accuracyLR,  precisionLR,  recallLR,  f_measureLR,  estimator_name='Logistic regression')
+        accuracyRF,  precisionRF,  recallRF,  f_measureRF =  evaluateResults(forest, pred, test_labels, accuracyRF,  precisionRF,  recallRF,  f_measureRF,  estimator_name='RF')
+        accuracySVM, precisionSVM, recallSVM, f_measureSVM = evaluateResults(svm,    pred, test_labels, accuracySVM, precisionSVM, recallSVM, f_measureSVM, estimator_name='SVM')
+        accuracyADA, precisionADA, recallADA, f_measureADA = evaluateResults(ada,    pred, test_labels, accuracyADA, precisionADA, recallADA, f_measureADA, estimator_name='ADABOOST')
+        accuracyMLP, precisionMLP, recallMLP, f_measureMLP = evaluateResults(mlp,    pred, test_labels, accuracyMLP, precisionMLP, recallMLP, f_measureMLP, estimator_name='MLP')
+
+
+        accuracyOVASVM, precisionOVASVM, recallOVASVM, f_measureOVASVM = evaluateResults(oneVSall_svm, pred, test_labels, accuracyOVASVM, precisionOVASVM, recallOVASVM, f_measureOVASVM, estimator_name='one versus all SVM')
         # evaluateResults(oneVSall_mlp, pred, test_labels, estimator_name='one versus all MLP')
-        # evaluateResults(oneVSall_rf, pred, test_labels, estimator_name='one versus all RF')
+        accuracyOVARF, precisionOVARF, recallOVARF, f_measureOVARF = evaluateResults(oneVSall_rf, pred, test_labels, accuracyOVARF, precisionOVARF, recallOVARF, f_measureOVARF, estimator_name='one versus all RF')
+
+
+    printResults(accuracyLR,  precisionLR,  recallLR,  f_measureLR,  name="LR")
+    printResults(accuracyRF,  precisionRF,  recallRF,  f_measureRF,  name="RF")
+    printResults(accuracySVM, precisionSVM, recallSVM, f_measureSVM, name="SVM")
+    printResults(accuracyADA, precisionADA, recallADA, f_measureADA, name="ADABOOST")
+    printResults(accuracyMLP, precisionMLP, recallMLP, f_measureMLP, name="MLP")
+    printResults(accuracyOVASVM, precisionOVASVM, recallOVASVM, f_measureOVASVM, name="OVA SVM")
+    printResults(accuracyOVARF, precisionOVARF, recallOVARF, f_measureOVARF, name="OVA RF")

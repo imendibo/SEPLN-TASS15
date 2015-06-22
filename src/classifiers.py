@@ -8,8 +8,7 @@ from sklearn import linear_model
 from sklearn.ensemble import AdaBoostClassifier
 
 def classifier_randomForest(features, labels):
-    print "Training the random forest..."
-
+    # print "Training the random forest..."
     # Initialize a Random Forest classifier with 100 trees
     forest = RandomForestClassifier(n_estimators=100)
 
