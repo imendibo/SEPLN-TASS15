@@ -5,10 +5,10 @@ from sklearn.multiclass import OneVsRestClassifier as OvsA
 from multilayer_perceptron import MLPClassifier as MLP
 from sklearn.lda import LDA
 from sklearn import linear_model
+from sklearn.ensemble import AdaBoostClassifier
 
 def classifier_randomForest(features, labels):
-    print "Training the random forest..."
-
+    # print "Training the random forest..."
     # Initialize a Random Forest classifier with 100 trees
     forest = RandomForestClassifier(n_estimators=100)
 
@@ -46,3 +46,9 @@ def logistic_regression(tweet_features, train_labels):
     logreg = linear_model.LogisticRegression()
     logreg.fit(tweet_features, train_labels)
     return logreg
+
+def adaboost(features, labels):
+    ada = AdaBoostClassifier(base_estimator=None, n_estimators=50, learning_rate=1.0, algorithm='SAMME.R', random_state=None)
+    ada.fit(features, labels)
+
+    return ada

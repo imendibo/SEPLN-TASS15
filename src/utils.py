@@ -130,8 +130,8 @@ def partition_data(tokenized_tweets, partition):
 def get_confusion_matrix(expected, predicted):
     cm = confusion_matrix(expected, predicted)
     np.set_printoptions(precision=2)
-    print('Confusion matrix, without normalization')
-    print(cm)
+    # print('Confusion matrix, without normalization')
+    # print(cm)
     return cm
     # plt.figure()
     # plot_confusion_matrix(cm)
@@ -180,7 +180,7 @@ def crossValidation(tweets, labels, partition):
     for train, test in kf:
         X_train, X_test, y_train, y_test = tweets[train], tweets[test], labels[train], labels[test]
 
-        print train, test
+        # print train, test
     # for tweet in tokenized_tweets:
     #     if count <= len(tokenized_tweets) / partition:
     #         test_tweets.append(tweet['clean'])
