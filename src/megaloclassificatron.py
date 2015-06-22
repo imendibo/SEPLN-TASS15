@@ -1,4 +1,4 @@
-__author__ = 'Iosu'
+__author__ = 'jeronicarandellsaladich'
 
 import xmlreader as xml
 import utils as ut
@@ -6,46 +6,6 @@ import numpy as np
 import BagOfWords as bow
 import classifiers as clf
 import sklearn.cross_validation as cv
-
-import matplotlib.pyplot as plt
-
-
-def printResults(accuracy, precision, recall, f_measure, name="Unknown"):
-    print "Result of " + name + ":"
-    print "Accuracy: ", sum(accuracy) / float(len(accuracy))
-    print "Precision: ", sum(precision) / float(len(precision))
-    print "Recall: ", sum(recall) / float(len(recall))
-    print "F1-measure: ", sum(f_measure) / float(len(f_measure))
-
-
-def evaluateResults(estimator, test_set, test_labels, accuracy, precision, recall, f_measure, estimator_name='Unknown'):
-    result = estimator.predict(test_set)
-    # print result
-
-    aux = result == test_labels
-    correct = sum(aux.astype(int))
-    _accuracy = (correct * 100) / len(test_set)
-
-    # print estimator_name, ': Accuracy = ' + str((correct * 100) / len(test_set)) + "% (" + str(correct) + "/" + str(len(test_set)) + ")"
-
-    cm = ut.get_confusion_matrix(test_labels, result)
-
-    f1_measure = ut.get_f1_measure(test_labels, result)
-    _precision, _recall, _f1score, _support = ut.get_measures_for_each_class(test_labels, result)
-
-    results.append(result)
-    accuracy.append(_accuracy)
-    precision.append(_precision)
-    recall.append(_recall)
-    f_measure.append(_f1score)
-
-    # print 'Average Precision:\t', _precision
-    # print 'Average Recall:\t', _recall
-    # print 'Average F1 Measure:\t', _f1score
-    # print '\n'
-
-    return results, accuracy, precision, recall, f_measure
-
 
 
 if __name__ == "__main__":
@@ -79,6 +39,14 @@ if __name__ == "__main__":
 
     for train, test in kf:
         # print "Fold "
+        train = np.array(train)
+        test = np.array(test)
+        tweets = np.array(tweets)
+        labels = np.array(labels)
+
+        kf2 = [[x_, y_] for x_, y_ in cv.KFold(n=sum(train), n_folds=2, shuffle=True, indices=False)]
+        train_classifiers = train[kf2[0][0]]
+        train_main_classify = train[kf2[0][1]]
         train = np.array(train)
         test = np.array(test)
         tweets = np.array(tweets)
@@ -180,4 +148,3 @@ if __name__ == "__main__":
         printResults(accuracyMLP, precisionMLP, recallMLP, f_measureMLP, name="MLP")
         printResults(accuracyOVASVM, precisionOVASVM, recallOVASVM, f_measureOVASVM, name="OVA SVM")
         printResults(accuracyOVARF, precisionOVARF, recallOVARF, f_measureOVARF, name="OVA RF")
-
