@@ -32,6 +32,10 @@ def onevsall(tweets_features, train_labels, estimator):
     clf_ova.fit(tweets_features, train_labels)
     return clf_ova
 
+def rbf_classifier(features, labels):
+    clf_rbf = svm.SVC(random_state=0)
+    clf_rbf.fit(features, labels)
+    return clf_rbf
 
 def multilayer_perceptron(tweet_features, train_labels):
     clf_mlp = MLP(n_hidden=100)
