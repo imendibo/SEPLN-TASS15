@@ -6,7 +6,7 @@ import numpy as np
 import BagOfWords as bow
 import classifiers as clf
 import sklearn.cross_validation as cv
-
+import pandas as pd
 import matplotlib.pyplot as plt
 
 
@@ -20,21 +20,37 @@ def printResults(accuracy, precision, recall, f_measure, name="Unknown"):
 
 if __name__ == "__main__":
 
-    xmlTrainFile = '../DATA/general-tweets-train-tagged.xml'
-    tweets = xml.readXML(xmlTrainFile)
+    # xmlTrainFile = '../DATA/general-tweets-train-tagged.xml'
+    # tweets = xml.readXML(xmlTrainFile)
+    #
+    # tokenized_tweets = []
+    # for tweet in tweets:
+    #     tokenized_tweets.append(ut.tokenize(tweet.content, tweet.polarity))
+    #
+    # tweets = []
+    # labels = []
+    # for tweet in tokenized_tweets:
+    #     tweets.append(tweet['clean'])
+    #     labels.append(tweet['class'])
+    #
+    # tweets = np.array(tweets)
+    # labels = np.array(labels)
 
-    tokenized_tweets = []
-    for tweet in tweets:
-        tokenized_tweets.append(ut.tokenize(tweet.content, tweet.polarity))
+
+    train = pd.read_csv("../Data/imdb/train.tsv", header=0, delimiter="\t", quoting=3)
+    # test = pd.read_csv("../Data/imdb/testData.tsv", header=0, delimiter="\t", quoting=3)
+
+    tokenized_train = []
+
+    for idx, text in train.iterrows():
+        # tokenized_train.append(ut.tokenize(text['review'], text['sentiment'])) # for labeledTrainData.tsv
+        tokenized_train.append(ut.tokenize(text['Phrase'], text['Sentiment']))   # for train.tsv
 
     tweets = []
     labels = []
-    for tweet in tokenized_tweets:
+    for tweet in tokenized_train:
         tweets.append(tweet['clean'])
         labels.append(tweet['class'])
-
-    tweets = np.array(tweets)
-    labels = np.array(labels)
 
     partition = 3
     train_tweets, test_tweets, validation_tweets, train_labels, test_labels, validation_labels = ut.crossValidation(
