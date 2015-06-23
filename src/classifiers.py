@@ -7,6 +7,8 @@ from sklearn.lda import LDA
 from sklearn import linear_model
 from sklearn.ensemble import AdaBoostClassifier
 import utils as ut
+import numpy as np
+
 
 def classifier_randomForest(features, labels):
     # print "Training the random forest..."
@@ -48,72 +50,51 @@ def logistic_regression(tweet_features, train_labels):
     logreg.fit(tweet_features, train_labels)
     return logreg
 
+
 def adaboost(features, labels):
-    ada = AdaBoostClassifier(base_estimator=None, n_estimators=50, learning_rate=1.0, algorithm='SAMME.R', random_state=None)
+    ada = AdaBoostClassifier(base_estimator=None, n_estimators=50, learning_rate=1.0, algorithm='SAMME.R',
+                             random_state=None)
     ada.fit(features, labels)
 
     return ada
 
 
 def train_classifiers(tweets_features, train_labels):
-
-    forest = classifier_randomForest(tweets_features, train_labels)
-    svm = classifier_svm(tweets_features, train_labels)
-    mlp = multilayer_perceptron(tweets_features, train_labels)
-    ada = adaboost(tweets_features, train_labels)
-    lr = logistic_regression(tweets_features, train_labels)
+    forest_cls = classifier_randomForest(tweets_features, train_labels)
+    svm_cls = classifier_svm(tweets_features, train_labels)
+    mlp_cls = multilayer_perceptron(tweets_features, train_labels)
+    ada_cls = adaboost(tweets_features, train_labels)
+    lr_cls = logistic_regression(tweets_features, train_labels)
 
     # ONE VS ALL CLASSIFIER WITH DIFFERENT ESTIMATORS.
     estimator = svm.SVC(random_state=0)
-    oneVSall_svm = onevsall(tweets_features, train_labels, estimator)
+    oneVSall_svm_cls = onevsall(tweets_features, train_labels, estimator)
     #
     # estimator = clf.MLP()
     # oneVSall_mlp = clf.onevsall(tweets_features, train_labels, estimator)
     #
     estimator = RandomForestClassifier(n_estimators=50)
-    oneVSall_rf = onevsall(tweets_features, train_labels, estimator)
+    oneVSall_rf_cls = onevsall(tweets_features, train_labels, estimator)
+    return forest_cls, svm_cls, mlp_cls, ada_cls, lr_cls, oneVSall_svm_cls, oneVSall_rf_cls
 
 
-def test_classifiers(pred):
-    results, accuracyLR, precisionLR, recallLR, f_measureLR = evaluateResults(lr, pred, test_labels, accuracyLR,
-                                                                              precisionLR, recallLR, f_measureLR,
-                                                                              estimator_name='Logistic regression')
-    results, accuracyRF, precisionRF, recallRF, f_measureRF = evaluateResults(forest, pred, test_labels, accuracyRF,
-                                                                              precisionRF, recallRF, f_measureRF,
-                                                                              estimator_name='RF')
-    results, accuracySVM, precisionSVM, recallSVM, f_measureSVM = evaluateResults(svm, pred, test_labels,
-                                                                                  accuracySVM, precisionSVM,
-                                                                                  recallSVM, f_measureSVM,
-                                                                                  estimator_name='SVM')
-    results, accuracyADA, precisionADA, recallADA, f_measureADA = evaluateResults(ada, pred, test_labels,
-                                                                                  accuracyADA, precisionADA,
-                                                                                  recallADA, f_measureADA,
-                                                                                  estimator_name='ADABOOST')
-    results, accuracyMLP, precisionMLP, recallMLP, f_measureMLP = evaluateResults(mlp, pred, test_labels,
-                                                                                  accuracyMLP, precisionMLP,
-                                                                                  recallMLP, f_measureMLP,
-                                                                                  estimator_name='MLP')
+def test_classifiers(pred, test_labels, classifiers):
+    forest_cls, svm_cls, mlp_cls, ada_cls, lr_cls, ova_svm_cls, ova_rf_cls = classifiers
+    results_lr = get_classification(lr_cls, pred, test_labels, estimator_name='Logistic regression')
+    results_forest = get_classification(forest_cls, pred, test_labels, estimator_name='RF')
+    results_svm = get_classification(svm_cls, pred, test_labels, estimator_name='SVM')
+    results_ada = get_classification(ada_cls, pred, test_labels, estimator_name='ADABOOST')
+    results_mlp = get_classification(mlp_cls, pred, test_labels, estimator_name='MLP')
+    results_ova_svm = get_classification(ova_svm_cls, pred, test_labels, estimator_name='one versus all SVM')
+    results_ova_rf = get_classification(ova_rf_cls, pred, test_labels, estimator_name='one versus all RF')
 
-    results, accuracyOVASVM, precisionOVASVM, recallOVASVM, f_measureOVASVM = evaluateResults(oneVSall_svm, pred,
-                                                                                              test_labels,
-                                                                                              accuracyOVASVM,
-                                                                                              precisionOVASVM,
-                                                                                              recallOVASVM,
-                                                                                              f_measureOVASVM,
-                                                                                              estimator_name='one versus all SVM')
-    # evaluateResults(oneVSall_mlp, pred, test_labels, estimator_name='one versus all MLP')
-    results, accuracyOVARF, precisionOVARF, recallOVARF, f_measureOVARF = evaluateResults(oneVSall_rf, pred,
-                                                                                          test_labels,
-                                                                                          accuracyOVARF,
-                                                                                          precisionOVARF,
-                                                                                          recallOVARF,
-                                                                                          f_measureOVARF,
-                                                                                          estimator_name='one versus all RF')
-
+    results = np.concatenate(
+        [results_lr, results_forest, results_svm, results_ada, results_mlp, results_ova_svm, results_ova_rf]
+    )
     return results
 
 
-def evaluateResults(estimator, test_set, test_labels, accuracy, precision, recall, f_measure, estimator_name='Unknown'):
+def evaluateResults(estimator, test_set, test_labels, estimator_name='Unknown'):
     result = estimator.predict(test_set)
     # print result
 
@@ -121,24 +102,17 @@ def evaluateResults(estimator, test_set, test_labels, accuracy, precision, recal
     correct = sum(aux.astype(int))
     _accuracy = (correct * 100) / len(test_set)
 
-    # print estimator_name, ': Accuracy = ' + str((correct * 100) / len(test_set)) + "% (" + str(correct) + "/" + str(len(test_set)) + ")"
-
     cm = ut.get_confusion_matrix(test_labels, result)
-
-    f1_measure = ut.get_f1_measure(test_labels, result)
     _precision, _recall, _f1score, _support = ut.get_measures_for_each_class(test_labels, result)
-
-    results.append(result)
-    accuracy.append(_accuracy)
-    precision.append(_precision)
-    recall.append(_recall)
-    f_measure.append(_f1score)
 
     # print 'Average Precision:\t', _precision
     # print 'Average Recall:\t', _recall
     # print 'Average F1 Measure:\t', _f1score
     # print '\n'
 
-    return results, accuracy, precision, recall, f_measure
+    return result, _accuracy, _precision, _recall, _f_measure
 
 
+def get_classification(estimator, test_set, test_labels, estimator_name='Unknown'):
+    result = estimator.predict(test_set)
+    return result

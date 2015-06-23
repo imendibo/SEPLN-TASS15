@@ -10,7 +10,6 @@ import sklearn.cross_validation as cv
 import matplotlib.pyplot as plt
 
 
-
 def printResults(accuracy, precision, recall, f_measure, name="Unknown"):
     print "Result of " + name + ":"
     print "Accuracy: ", sum(accuracy) / float(len(accuracy))
@@ -18,17 +17,6 @@ def printResults(accuracy, precision, recall, f_measure, name="Unknown"):
     print "Recall: ", sum(recall) / float(len(recall))
     print "F1-measure: ", sum(f_measure) / float(len(f_measure))
 
-
-
-accuracyLR, precisionLR, recallLR, f_measureLR = [], [], [], []
-accuracyRF, precisionRF, recallRF, f_measureRF = [], [], [], []
-accuracySVM, precisionSVM, recallSVM, f_measureSVM = [], [], [], []
-accuracyADA, precisionADA, recallADA, f_measureADA = [], [], [], []
-accuracyMLP, precisionMLP, recallMLP, f_measureMLP = [], [], [], []
-accuracyOVASVM, precisionOVASVM, recallOVASVM, f_measureOVASVM = [], [], [], []
-accuracyOVARF, precisionOVARF, recallOVARF, f_measureOVARF = [], [], [], []
-
-results = []
 
 if __name__ == "__main__":
 
@@ -45,13 +33,12 @@ if __name__ == "__main__":
         tweets.append(tweet['clean'])
         labels.append(tweet['class'])
 
+    tweets = np.array(tweets)
+    labels = np.array(labels)
+
     partition = 3
     train_tweets, test_tweets, validation_tweets, train_labels, test_labels, validation_labels = ut.crossValidation(
         tweets, labels, partition)
-
-
-    tweets = np.array(tweets)
-    labels = np.array(labels)
 
     print len(test_tweets)
     print len(train_tweets)
@@ -66,7 +53,8 @@ if __name__ == "__main__":
     '''
     Training different classifiers.
     '''
-    clf.train_classifiers(tweets_features, train_labels, vectorizer)
+    forest_cls, svm_cls, mlp_cls, ada_cls, lr_cls, ova_svm_cls, ova_rf_cls = clf.train_classifiers(tweets_features,
+                                                                                                   train_labels)
 
     '''
     Test the different classifiers with the test tweets.
@@ -75,7 +63,8 @@ if __name__ == "__main__":
     pred = vectorizer.transform(test_tweets)
     pred = pred.toarray()
 
-    results = clf.test_classifiers(pred)
+    classifiers = (forest_cls, svm_cls, mlp_cls, ada_cls, lr_cls, oneVSall_svm_cls, oneVSall_rf_cls)
+    results = clf.test_classifiers(pred, test_labels, classifiers)
 
     super_cl = clf.classifier_svm(results, test_labels)
 
