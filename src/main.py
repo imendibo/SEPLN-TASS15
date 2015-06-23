@@ -6,6 +6,7 @@ import numpy as np
 import BagOfWords as bow
 import classifiers as clf
 import sklearn.cross_validation as cv
+import pandas as pd
 
 import matplotlib.pyplot as plt
 
@@ -18,28 +19,44 @@ def printResults(accuracy, precision, recall, f_measure, name="Unknown"):
     print "F1-measure: ", sum(f_measure) / float(len(f_measure))
 
 
-    return results, accuracy, _precision, _recall, _f1score, _support
+    # return results, accuracy, _precision, _recall, _f1score, _support
 
 
 if __name__ == "__main__":
 
-    xmlTrainFile = '../DATA/general-tweets-train-tagged.xml'
-    tweets = xml.readXML(xmlTrainFile)
+    # xmlTrainFile = '../DATA/general-tweets-train-tagged.xml'
+    # tweets = xml.readXML(xmlTrainFile)
 
-    tokenized_tweets = []
-    for tweet in tweets:
-        tokenized_tweets.append(ut.tokenize(tweet.content, tweet.polarity))
+    # tokenized_tweets = []
+    # for tweet in tweets:
+    #     tokenized_tweets.append(ut.tokenize(tweet.content, tweet.polarity))
+    #
+    # tweets = []
+    # labels = []
+    # for tweet in tokenized_tweets:
+    #     tweets.append(tweet['clean'])
+    #     labels.append(tweet['class'])
+
+    # train = pd.read_csv("../Data/imdb/labeledTrainData.tsv", header=0, delimiter="\t", quoting=3)
+    train = pd.read_csv("../Data/imdb/train.tsv", header=0, delimiter="\t", quoting=3)
+    # test = pd.read_csv("../Data/imdb/testData.tsv", header=0, delimiter="\t", quoting=3)
+
+    tokenized_train = []
+
+    for idx, text in train.iterrows():
+        # tokenized_train.append(ut.tokenize(text['review'], text['sentiment'])) # for labeledTrainData.tsv
+        tokenized_train.append(ut.tokenize(text['Phrase'], text['Sentiment']))   # for train.tsv
 
     tweets = []
     labels = []
-    for tweet in tokenized_tweets:
+    for tweet in tokenized_train:
         tweets.append(tweet['clean'])
         labels.append(tweet['class'])
 
     partition = 5
-    # train_tweets, test_tweets, train_labels, test_labels = ut.crossValidation(tweets, labels, partition)
+    train_tweets, test_tweets, train_labels, test_labels = ut.crossValidation2(tweets, labels, partition)
 
-    kf = cv.KFold(n=len(tweets), n_folds=3, shuffle=True, indices=False)
+    # kf = cv.KFold(n=len(tweets), n_folds=3, shuffle=True, indices=False)
 
     accuracyLR, precisionLR, recallLR, f_measureLR = [], [], [], []
     accuracyRF, precisionRF, recallRF, f_measureRF = [], [], [], []
@@ -50,87 +67,93 @@ if __name__ == "__main__":
     accuracyOVARF, precisionOVARF, recallOVARF, f_measureOVARF = [], [], [], []
     results = []
 
-    for train, test in kf:
-        # print "Fold "
-        train = np.array(train)
-        test = np.array(test)
-        tweets = np.array(tweets)
-        labels = np.array(labels)
+    # for train, test in kf:
+    # print "Fold "
+    # train = np.array(train)
+    # test = np.array(test)
+    # tweets = np.array(tweets)
+    # labels = np.array(labels)
 
-        # for train, test in kf:
-        # train_tweets = tweets[np.array(train)]
-        train_tweets, test_tweets, train_labels, test_labels = tweets[train], tweets[test], labels[train], labels[test]
-        # train_tweets, train_labels, test_tweets, test_labels = ut.partition_data(tokenized_tweets, partition)
+    # for train, test in kf:
+    # train_tweets = tweets[np.array(train)]
+    # train_tweets, test_tweets, train_labels, test_labels = tweets[train], tweets[test], labels[train], labels[test]
+    # train_tweets, train_labels, test_tweets, test_labels = ut.partition_data(tokenized_tweets, partition)
 
-        # print len(test_tweets)
-        # print len(train_tweets)
+    print len(test_tweets)
+    print len(train_tweets)
 
-        train_tweets = np.hstack(train_tweets)
-        dictionary, tweets_features, vectorizer = bow.bow(train_tweets, vec="tfidf")
-        # dictionary, tweets_features, vectorizer = bow.bow(train_tweets, vec="count")
+    train_tweets = np.hstack(train_tweets)
+    dictionary, tweets_features, vectorizer = bow.bow(train_tweets, vec="tfidf")
+    # dictionary, tweets_features, vectorizer = bow.bow(train_tweets, vec="count")
 
-        # print dictionary
+    # print dictionary
 
-        '''Dimsionality reduction'''
-        # LDA
-        # lda = clf.lda(tweets_features, train_labels)
-        # print tweets_features.shape
+    '''Dimsionality reduction'''
+    # LDA
+    # lda = clf.lda(tweets_features, train_labels)
+    # print tweets_features.shape
 
-        '''
-        Training different classifiers.
-        '''
-        forest = clf.classifier_randomForest(tweets_features, train_labels)
-        svm = clf.classifier_svm(tweets_features, train_labels)
-        mlp = clf.multilayer_perceptron(tweets_features, train_labels)
-        ada = clf.adaboost(tweets_features, train_labels)
-        lr = clf.logistic_regression(tweets_features, train_labels)
+    '''
+    Training different classifiers.
+    '''
+    # forest = clf.classifier_randomForest(tweets_features, train_labels)
+    svm = clf.classifier_svm(tweets_features, train_labels)
+    # mlp = clf.multilayer_perceptron(tweets_features, train_labels)
+    # ada = clf.adaboost(tweets_features, train_labels)
+    # lr = clf.logistic_regression(tweets_features, train_labels)
 
-        # ONE VS ALL CLASSIFIER WITH DIFFERENT ESTIMATORS.
-        estimator = clf.svm.SVC(random_state=0)
-        oneVSall_svm = clf.onevsall(tweets_features, train_labels, estimator)
-        #
-        # estimator = clf.MLP()
-        # oneVSall_mlp = clf.onevsall(tweets_features, train_labels, estimator)
-        #
-        estimator = clf.RandomForestClassifier(n_estimators=50)
-        oneVSall_rf = clf.onevsall(tweets_features, train_labels, estimator)
+    # ONE VS ALL CLASSIFIER WITH DIFFERENT ESTIMATORS.
+    # estimator = clf.svm.SVC(random_state=0)
+    # oneVSall_svm = clf.onevsall(tweets_features, train_labels, estimator)
+    #
+    # estimator = clf.MLP()
+    # oneVSall_mlp = clf.onevsall(tweets_features, train_labels, estimator)
+    #
+    # estimator = clf.RandomForestClassifier(n_estimators=50)
+    # oneVSall_rf = clf.onevsall(tweets_features, train_labels, estimator)
 
-        '''
-        Test the different classifiers with the test tweets.
-        '''
+    '''
+    Test the different classifiers with the test tweets.
+    '''
 
-        pred = vectorizer.transform(test_tweets)
-        pred = pred.toarray()
-        # pred = SelectKBest(chi2, k=4500).fit_transform(pred, test_labels)
-
-
-        # evaluateResults(lda, pred, test_labels, estimator_name='LDA')
+    pred = vectorizer.transform(test_tweets)
+    pred = pred.toarray()
+    # pred = SelectKBest(chi2, k=4500).fit_transform(pred, test_labels)
 
 
-        results, accuracyLR, precisionLR, recallLR, f_measureLR = clf.evaluateResults(lr, pred, test_labels,
-                                                                                  estimator_name='Logistic regression')
-        results, accuracyRF, precisionRF, recallRF, f_measureRF = clf.evaluateResults(forest, pred, test_labels,
-                                                                                  estimator_name='RF')
-        results, accuracySVM, precisionSVM, recallSVM, f_measureSVM = clf.evaluateResults(svm, pred, test_labels,
+    # evaluateResults(lda, pred, test_labels, estimator_name='LDA')
+
+
+    # results, accuracyLR, precisionLR, recallLR, f_measureLR = clf.evaluateResults(lr, pred, test_labels,
+    #                                                                           estimator_name='Logistic regression')
+    # results, accuracyRF, precisionRF, recallRF, f_measureRF = clf.evaluateResults(forest, pred, test_labels,
+    #                                                                           estimator_name='RF')
+    results, accuracySVM, precisionSVM, recallSVM, f_measureSVM = clf.evaluateResults(svm, pred, test_labels,
                                                                                       estimator_name='SVM')
-        results, accuracyADA, precisionADA, recallADA, f_measureADA = clf.evaluateResults(ada, pred, test_labels,
-                                                                                      estimator_name='ADABOOST')
-        results, accuracyMLP, precisionMLP, recallMLP, f_measureMLP = clf.evaluateResults(mlp, pred, test_labels,
-                                                                                      estimator_name='MLP')
+    # results, accuracyADA, precisionADA, recallADA, f_measureADA = clf.evaluateResults(ada, pred, test_labels,
+    #                                                                               estimator_name='ADABOOST')
+    # results, accuracyMLP, precisionMLP, recallMLP, f_measureMLP = clf.evaluateResults(mlp, pred, test_labels,
+    #                                                                               estimator_name='MLP')
+    #
+    # results, accuracyOVASVM, precisionOVASVM, recallOVASVM, f_measureOVASVM = clf.evaluateResults(oneVSall_svm, pred,
+    #                                                                                           test_labels,
+    #                                                                                           estimator_name='one versus all SVM')
+    # # evaluateResults(oneVSall_mlp, pred, test_labels, estimator_name='one versus all MLP')
+    # results, accuracyOVARF, precisionOVARF, recallOVARF, f_measureOVARF = clf.evaluateResults(oneVSall_rf, pred,
+    #                                                                                       test_labels,
+    #                                                                                       estimator_name='one versus all RF')
 
-        results, accuracyOVASVM, precisionOVASVM, recallOVASVM, f_measureOVASVM = clf.evaluateResults(oneVSall_svm, pred,
-                                                                                                  test_labels,
-                                                                                                  estimator_name='one versus all SVM')
-        # evaluateResults(oneVSall_mlp, pred, test_labels, estimator_name='one versus all MLP')
-        results, accuracyOVARF, precisionOVARF, recallOVARF, f_measureOVARF = clf.evaluateResults(oneVSall_rf, pred,
-                                                                                              test_labels,
-                                                                                              estimator_name='one versus all RF')
+    print 'Accuracy SVM:\t', accuracySVM
+    print 'Average Precision:\t', precisionSVM
+    print 'Average Recall:\t', recallSVM
+    print 'Average F1 Measure:\t', f_measureSVM
+    print '\n'
 
-    printResults(accuracyLR, precisionLR, recallLR, f_measureLR, name="LR")
-    printResults(accuracyRF, precisionRF, recallRF, f_measureRF, name="RF")
-    printResults(accuracySVM, precisionSVM, recallSVM, f_measureSVM, name="SVM")
-    printResults(accuracyADA, precisionADA, recallADA, f_measureADA, name="ADABOOST")
-    printResults(accuracyMLP, precisionMLP, recallMLP, f_measureMLP, name="MLP")
-    printResults(accuracyOVASVM, precisionOVASVM, recallOVASVM, f_measureOVASVM, name="OVA SVM")
-    printResults(accuracyOVARF, precisionOVARF, recallOVARF, f_measureOVARF, name="OVA RF")
 
+# printResults(accuracyLR, precisionLR, recallLR, f_measureLR, name="LR")
+# printResults(accuracyRF, precisionRF, recallRF, f_measureRF, name="RF")
+# printResults(accuracySVM, precisionSVM, recallSVM, f_measureSVM, name="SVM")
+# printResults(accuracyADA, precisionADA, recallADA, f_measureADA, name="ADABOOST")
+# printResults(accuracyMLP, precisionMLP, recallMLP, f_measureMLP, name="MLP")
+# printResults(accuracyOVASVM, precisionOVASVM, recallOVASVM, f_measureOVASVM, name="OVA SVM")
+# printResults(accuracyOVARF, precisionOVARF, recallOVARF, f_measureOVARF, name="OVA RF")

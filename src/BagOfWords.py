@@ -50,14 +50,14 @@ def bow(list_of_words, vec='Unknown'):
                                      ngram_range=[2,3],     \
                                      tokenizer = None,    \
                                      preprocessor = None, \
-                                     stop_words = stopwords,   \
+                                     # stop_words = stopwords,   \
                                      max_features = 5000)
     else:
         vectorizer = CountVectorizer(analyzer = "char", \
                                      ngram_range=[2,3],     \
                                      tokenizer = None,    \
                                      preprocessor = None, \
-                                     stop_words = stopwords,   \
+                                     # stop_words = stopwords,   \
                                      max_features = 5000)
 
 

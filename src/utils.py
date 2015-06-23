@@ -164,6 +164,12 @@ def get_measures_for_each_class(expected, predicted):
     # plt.show()
 
 
+def crossValidation2(tweets, labels, partition):
+    train_tweets, test_tweets, train_labels, test_labels = cv.train_test_split(tweets, labels, test_size=1/float(partition), random_state=0)
+
+    return train_tweets, test_tweets, train_labels, test_labels
+
+
 def crossValidation(tweets, labels, partition):
     count = 0
     test_tweets = []
