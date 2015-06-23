@@ -73,7 +73,7 @@ if __name__ == "__main__":
     val_tweet_trans = vectorizer.transform(validation_tweets)
     val_tweet_trans = val_tweet_trans.toarray()
 
-    test_results = clf.test_classifiers(val_tweet_trans, test_labels, classifiers)
+    test_results = clf.test_classifiers(val_tweet_trans, validation_labels, classifiers)
 
     '''
     Now we have a train_results and test_results. Lets train and test a super classifier
@@ -81,5 +81,5 @@ if __name__ == "__main__":
 
     super_clf = clf.classifier_svm(train_results, test_labels)
 
-    clf.evaluateResults(super_clf, val_tweet_trans, test_labels, estimator_name='Supper Classifier')
+    clf.evaluateResults(super_clf, test_results, validation_labels, estimator_name='Supper Classifier')
     import pdb; pdb.set_trace()
