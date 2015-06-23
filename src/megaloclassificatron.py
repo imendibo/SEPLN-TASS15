@@ -48,7 +48,6 @@ if __name__ == "__main__":
     dictionary, tweets_features, vectorizer = bow.bow(train_tweets, vec="tfidf")
     # dictionary, tweets_features, vectorizer = bow.bow(train_tweets, vec="count")
 
-    # print dictionary
 
     '''
     Training different classifiers.
@@ -57,27 +56,29 @@ if __name__ == "__main__":
                                                                                                    train_labels)
 
     '''
-    Test the different classifiers with the test tweets.
+    Create results dataset from classifiers. Where each attribute is a classifier and each row corresponds to the
+    classification of a tweet according to each classifier.
+
     '''
-
-
-    test_tweet_trans= vectorizer.transform(test_tweets)
+    test_tweet_trans = vectorizer.transform(test_tweets)
     test_tweet_trans = test_tweet_trans.toarray()
 
     classifiers = (forest_cls, svm_cls, mlp_cls, ada_cls, lr_cls, ova_svm_cls, ova_rf_cls)
-    results = clf.test_classifiers(test_tweet_trans, test_labels, classifiers)
+    train_results = clf.test_classifiers(test_tweet_trans, test_labels, classifiers)
 
-    super_cl = clf.classifier_svm(results, test_labels)
+    '''
+    Train the super classifier on the test set
+    '''
 
+    val_tweet_trans = vectorizer.transform(validation_tweets)
+    val_tweet_trans = val_tweet_trans.toarray()
 
-    pred = vectorizer.transform(validation_tweets)
-    pred = pred.toarray()
+    test_results = clf.test_classifiers(val_tweet_trans, test_labels, classifiers)
 
+    '''
+    Now we have a train_results and test_results. Lets train and test a super classifier
+    '''
 
-    printResults(accuracyLR, precisionLR, recallLR, f_measureLR, name="LR")
-    printResults(accuracyRF, precisionRF, recallRF, f_measureRF, name="RF")
-    printResults(accuracySVM, precisionSVM, recallSVM, f_measureSVM, name="SVM")
-    printResults(accuracyADA, precisionADA, recallADA, f_measureADA, name="ADABOOST")
-    printResults(accuracyMLP, precisionMLP, recallMLP, f_measureMLP, name="MLP")
-    printResults(accuracyOVASVM, precisionOVASVM, recallOVASVM, f_measureOVASVM, name="OVA SVM")
-    printResults(accuracyOVARF, precisionOVARF, recallOVARF, f_measureOVARF, name="OVA RF")
+    super_clf = clf.classifier_svm(train_results, test_labels)
+
+    import pdb; pdb.set_trace()

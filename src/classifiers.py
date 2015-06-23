@@ -88,9 +88,8 @@ def test_classifiers(pred, test_labels, classifiers):
     results_ova_svm = get_classification(ova_svm_cls, pred, test_labels, estimator_name='one versus all SVM')
     results_ova_rf = get_classification(ova_rf_cls, pred, test_labels, estimator_name='one versus all RF')
 
-    results = np.concatenate(
-        [results_lr, results_forest, results_svm, results_ada, results_mlp, results_ova_svm, results_ova_rf]
-    )
+    results = np.column_stack([results_lr, results_forest, results_svm, results_ada, results_mlp,
+                               results_ova_svm, results_ova_rf])
     return results
 
 
