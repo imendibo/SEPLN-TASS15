@@ -81,4 +81,5 @@ if __name__ == "__main__":
 
     super_clf = clf.classifier_svm(train_results, test_labels)
 
+    clf.evaluateResults(super_clf, val_tweet_trans, test_labels, estimator_name='Supper Classifier')
     import pdb; pdb.set_trace()
