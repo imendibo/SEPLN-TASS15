@@ -110,6 +110,7 @@ def test_classifiers(pred):
                                                                                           f_measureOVARF,
                                                                                           estimator_name='one versus all RF')
 
+    return results
 
 
 def evaluateResults(estimator, test_set, test_labels, accuracy, precision, recall, f_measure, estimator_name='Unknown'):

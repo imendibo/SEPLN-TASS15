@@ -66,7 +66,7 @@ if __name__ == "__main__":
     '''
     Training different classifiers.
     '''
-    clf.train_classifiers(tweets_features, train_labels)
+    clf.train_classifiers(tweets_features, train_labels, vectorizer)
 
     '''
     Test the different classifiers with the test tweets.
@@ -75,7 +75,7 @@ if __name__ == "__main__":
     pred = vectorizer.transform(test_tweets)
     pred = pred.toarray()
 
-    clf.test_classifiers(pred)
+    results = clf.test_classifiers(pred)
 
     super_cl = clf.classifier_svm(results, test_labels)
 
