@@ -60,13 +60,15 @@ if __name__ == "__main__":
     Test the different classifiers with the test tweets.
     '''
 
-    pred = vectorizer.transform(test_tweets)
-    pred = pred.toarray()
 
-    classifiers = (forest_cls, svm_cls, mlp_cls, ada_cls, lr_cls, oneVSall_svm_cls, oneVSall_rf_cls)
-    results = clf.test_classifiers(pred, test_labels, classifiers)
+    test_tweet_trans= vectorizer.transform(test_tweets)
+    test_tweet_trans = test_tweet_trans.toarray()
+
+    classifiers = (forest_cls, svm_cls, mlp_cls, ada_cls, lr_cls, ova_svm_cls, ova_rf_cls)
+    results = clf.test_classifiers(test_tweet_trans, test_labels, classifiers)
 
     super_cl = clf.classifier_svm(results, test_labels)
+
 
     pred = vectorizer.transform(validation_tweets)
     pred = pred.toarray()
