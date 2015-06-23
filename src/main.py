@@ -84,14 +84,13 @@ if __name__ == "__main__":
         tweets = np.array(tweets)
         labels = np.array(labels)
 
-        for train, test in kf:
+        # for train, test in kf:
             # train_tweets = tweets[np.array(train)]
-            train_tweets, test_tweets, train_labels, test_labels = tweets[train], tweets[test], labels[train], labels[
-                test]
+        train_tweets, test_tweets, train_labels, test_labels = tweets[train], tweets[test], labels[train], labels[test]
         # train_tweets, train_labels, test_tweets, test_labels = ut.partition_data(tokenized_tweets, partition)
 
-        print len(test_tweets)
-        print len(train_tweets)
+        # print len(test_tweets)
+        # print len(train_tweets)
 
         train_tweets = np.hstack(train_tweets)
         dictionary, tweets_features, vectorizer = bow.bow(train_tweets, vec="tfidf")
@@ -171,13 +170,13 @@ if __name__ == "__main__":
                                                                                               f_measureOVARF,
                                                                                               estimator_name='one versus all RF')
 
-        super_cl = clf.classifier_svm(results, test_labels)
-
-        printResults(accuracyLR, precisionLR, recallLR, f_measureLR, name="LR")
-        printResults(accuracyRF, precisionRF, recallRF, f_measureRF, name="RF")
-        printResults(accuracySVM, precisionSVM, recallSVM, f_measureSVM, name="SVM")
-        printResults(accuracyADA, precisionADA, recallADA, f_measureADA, name="ADABOOST")
-        printResults(accuracyMLP, precisionMLP, recallMLP, f_measureMLP, name="MLP")
-        printResults(accuracyOVASVM, precisionOVASVM, recallOVASVM, f_measureOVASVM, name="OVA SVM")
-        printResults(accuracyOVARF, precisionOVARF, recallOVARF, f_measureOVARF, name="OVA RF")
+        # super_cl = clf.classifier_svm(results, test_labels)
+        #
+    printResults(accuracyLR, precisionLR, recallLR, f_measureLR, name="LR")
+    printResults(accuracyRF, precisionRF, recallRF, f_measureRF, name="RF")
+    printResults(accuracySVM, precisionSVM, recallSVM, f_measureSVM, name="SVM")
+    printResults(accuracyADA, precisionADA, recallADA, f_measureADA, name="ADABOOST")
+    printResults(accuracyMLP, precisionMLP, recallMLP, f_measureMLP, name="MLP")
+    printResults(accuracyOVASVM, precisionOVASVM, recallOVASVM, f_measureOVASVM, name="OVA SVM")
+    printResults(accuracyOVARF, precisionOVARF, recallOVARF, f_measureOVARF, name="OVA RF")
 
