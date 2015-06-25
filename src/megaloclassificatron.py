@@ -95,6 +95,7 @@ if __name__ == "__main__":
     Now we have a train_results and test_results. Lets train and test a super classifier
     '''
 
+
     super_clf = clf.classifier_svm(train_results, test_labels)
 
     clf.evaluateResults(super_clf, test_results, validation_labels, estimator_name='Supper Classifier')
