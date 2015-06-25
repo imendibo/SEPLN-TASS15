@@ -68,24 +68,27 @@ if __name__ == "__main__":
     '''
     Training different classifiers.
     '''
-    forest_cls, svm_cls, mlp_cls, ada_cls, lr_cls, ova_svm_cls, ova_rf_cls = clf.train_classifiers(tweets_features,
-                                                                                                   train_labels)
+    print '\nTraining Classifiers:\n'
+    # forest_cls, svm_cls, rbf_cls, ada_cls, lr_cls = clf.train_classifiers(tweets_features,train_labels)
+    forest_cls, svm_cls, lr_cls = clf.train_classifiers(tweets_features,train_labels)
 
     '''
     Create results dataset from classifiers. Where each attribute is a classifier and each row corresponds to the
     classification of a tweet according to each classifier.
 
     '''
+    print '\nCreating Train set for super classifier ... '
     test_tweet_trans = vectorizer.transform(test_tweets)
     test_tweet_trans = test_tweet_trans.toarray()
 
-    classifiers = (forest_cls, svm_cls, mlp_cls, ada_cls, lr_cls, ova_svm_cls, ova_rf_cls)
+    # classifiers = (forest_cls, svm_cls, rbf_cls, ada_cls, lr_cls)
+    classifiers = (forest_cls, svm_cls, lr_cls)
     train_results = clf.test_classifiers(test_tweet_trans, test_labels, classifiers)
 
     '''
     Train the super classifier on the test set
     '''
-
+    print '\nCreating Test set for super classifier ... '
     val_tweet_trans = vectorizer.transform(validation_tweets)
     val_tweet_trans = val_tweet_trans.toarray()
 
@@ -94,8 +97,10 @@ if __name__ == "__main__":
     '''
     Now we have a train_results and test_results. Lets train and test a super classifier
     '''
-
+    print '\nTraining super classifier ... '
     super_clf = clf.rbf_classifier(train_results, test_labels)
 
-    clf.evaluateResults(super_clf, test_results, validation_labels, estimator_name='Supper Classifier')
+    print '\nEvaluating Super classifier ... '
+    results, accuracy, precision, recall, f_measure = clf.evaluateResults(super_clf, test_results, validation_labels, estimator_name='Supper Classifier')
     import pdb; pdb.set_trace()
+    printResults(accuracy, precision, recall, f_measure, name="SUPER CLASSIFICATOR")

@@ -45,20 +45,20 @@ def bow(list_of_words, vec='Unknown'):
     # Initialize the "CountVectorizer" object, which is scikit-learn's
     # bag of words tool.
 
-    if(vec.__eq__('tfidf')):
-        vectorizer = TfidfVectorizer(analyzer = "char", \
-                                     ngram_range=[2,3],     \
-                                     tokenizer = None,    \
-                                     preprocessor = None, \
+    if (vec.__eq__('tfidf')):
+        vectorizer = TfidfVectorizer(analyzer="char", \
+                                     ngram_range=[2, 3], \
+                                     tokenizer=None, \
+                                     preprocessor=None, \
                                      # stop_words = stopwords,   \
-                                     max_features = 5000)
+                                     max_features=5000)
     else:
-        vectorizer = CountVectorizer(analyzer = "char", \
-                                     ngram_range=[2,3],     \
-                                     tokenizer = None,    \
-                                     preprocessor = None, \
+        vectorizer = CountVectorizer(analyzer="char", \
+                                     ngram_range=[2, 3], \
+                                     tokenizer=None, \
+                                     preprocessor=None, \
                                      # stop_words = stopwords,   \
-                                     max_features = 5000)
+                                     max_features=5000)
 
 
     # fit_transform() does two functions: First, it fits the model
