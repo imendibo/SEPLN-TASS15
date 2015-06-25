@@ -67,6 +67,7 @@ if __name__ == "__main__":
     accuracyOVARF, precisionOVARF, recallOVARF, f_measureOVARF = [], [], [], []
     results = []
 
+
     # for train, test in kf:
     # print "Fold "
     # train = np.array(train)
