@@ -58,7 +58,7 @@ if __name__ == "__main__":
     #     tweets, labels, partition)
 
     # Second partition
-    train_tweets, validation_tweets, test_tweets, train_labels, validation_labels, test_labels = ut.crossValidation(
+    validation_tweets, train_tweets, test_tweets, validation_labels, train_labels, test_labels = ut.crossValidation(
         tweets, labels, partition)
 
     print len(test_tweets)
@@ -107,9 +107,9 @@ if __name__ == "__main__":
     print '\nEvaluating Super classifier ... '
     results, accuracy, precision, recall, f_measure = clf.evaluateResults(super_clf, test_results, validation_labels, estimator_name='Supper Classifier')
     import pdb; pdb.set_trace()
-    np.savetxt("train_results_2.csv", train_results, delimiter=",")
-    np.savetxt("train_labels_2.csv", test_labels, delimiter=",")
-    np.savetxt("test_results_2.csv", test_results, delimiter=",")
-    np.savetxt("test_labels_2.csv", validation_labels, delimiter=",")
+    np.savetxt("train_results_3.csv", train_results, delimiter=",")
+    np.savetxt("train_labels_3.csv", test_labels, delimiter=",")
+    np.savetxt("test_results_3.csv", test_results, delimiter=",")
+    np.savetxt("test_labels_3.csv", validation_labels, delimiter=",")
 
     printResults(accuracy, precision, recall, f_measure, name="SUPER CLASSIFICATOR")
