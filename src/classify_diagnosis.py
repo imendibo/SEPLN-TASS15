@@ -14,4 +14,3 @@ if __name__ == '__main__':
     test_label_file = 'test_labels.csv'
     train_label = np.genfromtxt(test_label_file, delimiter=',')
 
-    
