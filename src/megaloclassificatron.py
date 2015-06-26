@@ -70,8 +70,7 @@ if __name__ == "__main__":
     '''
     print '\nTraining Classifiers:\n'
     # forest_cls, svm_cls, rbf_cls, ada_cls, lr_cls = clf.train_classifiers(tweets_features,train_labels)
-    forest_cls, svm_cls, lr_cls = clf.train_classifiers(tweets_features,train_labels)
-
+    forest_cls, svm_cls, lr_cls, ada_cls = clf.train_classifiers(tweets_features,train_labels)
     '''
     Create results dataset from classifiers. Where each attribute is a classifier and each row corresponds to the
     classification of a tweet according to each classifier.
@@ -82,7 +81,7 @@ if __name__ == "__main__":
     test_tweet_trans = test_tweet_trans.toarray()
 
     # classifiers = (forest_cls, svm_cls, rbf_cls, ada_cls, lr_cls)
-    classifiers = (forest_cls, svm_cls, lr_cls)
+    classifiers = (forest_cls, svm_cls, lr_cls, ada_cls)
     train_results = clf.test_classifiers(test_tweet_trans, test_labels, classifiers)
 
     '''

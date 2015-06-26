@@ -68,12 +68,12 @@ def train_classifiers(tweets_features, train_labels):
     forest_cls = classifier_randomForest(tweets_features, train_labels)
     print '\n\tTraining Linear SVM..'
     svm_cls = classifier_svm(tweets_features, train_labels)
-    # print '\n\tTraining RBF SVM..'
-    # rbf_cls = rbf_classifier(tweets_features,train_labels)
-    # print '\n\tTraining Adaboost..'
-    # ada_cls = adaboost(tweets_features, train_labels)
     print '\n\tTraining Linear Regression..'
     lr_cls = logistic_regression(tweets_features, train_labels)
+    # print '\n\tTraining RBF SVM..'
+    # rbf_cls = rbf_classifier(tweets_features,train_labels)
+    print '\n\tTraining Adaboost..'
+    ada_cls = adaboost(tweets_features, train_labels)
 
     # ONE VS ALL CLASSIFIER WITH DIFFERENT ESTIMATORS.
     # estimator = svm.SVC(random_state=0)
@@ -85,7 +85,7 @@ def train_classifiers(tweets_features, train_labels):
     # estimator = RandomForestClassifier(n_estimators=50)
     # oneVSall_rf_cls = onevsall(tweets_features, train_labels, estimator)
     # return forest_cls, svm_cls, rbf_cls, ada_cls, lr_cls
-    return forest_cls, svm_cls, lr_cls
+    return forest_cls, svm_cls, lr_cls, ada_cls
 #
 # def test_classifiers(pred, test_labels, classifiers):
 #     forest_cls, svm_cls, rbf_cls, ada_cls, lr_cls = classifiers
@@ -99,11 +99,12 @@ def train_classifiers(tweets_features, train_labels):
 
 
 def test_classifiers(pred, test_labels, classifiers):
-    forest_cls, svm_cls, lr_cls = classifiers
+    forest_cls, svm_cls, lr_cls, ada_cls = classifiers
     results_forest = get_classification(forest_cls, pred, test_labels, estimator_name='RF')
     results_svm = get_classification(svm_cls, pred, test_labels, estimator_name='SVM')
     results_lr = get_classification(lr_cls, pred, test_labels, estimator_name='Logistic regression')
-    results = np.column_stack([results_forest, results_lr, results_svm])
+    results_ada = get_classification(ada_cls, pred, test_labels, estimator_name='ADABOOST')
+    results = np.column_stack([results_forest, results_svm, results_lr, results_ada])
     return results
 
 
