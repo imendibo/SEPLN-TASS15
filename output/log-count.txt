@@ -1,0 +1,41 @@
+Result of LR:
+    Accuracy: 38.6666666667
+    Precision: 0.352082210626
+    Recall: 0.355542772695
+    F1-measure: 0.352761570216
+
+Result of RF:
+    Accuracy: 38.3333333333
+    Precision: 0.353599941126
+    Recall: 0.322151866913
+    F1-measure: 0.285130985772
+
+Result of SVM:
+    Accuracy: 36.0
+    Precision: 0.331504365756
+    Recall: 0.333167426233
+    F1-measure: 0.331779301543
+
+Result of ADABOOST:
+    Accuracy: 36.6666666667
+    Precision: 0.3296002245
+    Recall: 0.322835500495
+    F1-measure: 0.303917125132
+
+Result of MLP:
+    Accuracy: 37.3333333333
+    Precision: 0.368084378681
+    Recall: 0.348423038506
+    F1-measure: 0.305290705511
+
+Result of OVA SVM:
+    Accuracy: 40.3333333333
+    Precision: 0.345936968545
+    Recall: 0.351487103594
+    F1-measure: 0.327921062424
+
+Result of OVA RF:
+    Accuracy: 39.3333333333
+    Precision: 0.359866715003
+    Recall: 0.335606617371
+    F1-measure: 0.315772228721
