@@ -118,6 +118,7 @@ def evaluateResults(estimator, test_set, test_labels, estimator_name='Unknown'):
 
     cm = ut.get_confusion_matrix(test_labels, result)
     _precision, _recall, _f1score, _support = ut.get_measures_for_each_class(test_labels, result)
+    print 'Estimator ', estimator_name
     print 'Average Accuracy:\t', _accuracy
     print 'Average Precision:\t', _precision
     print 'Average Recall:\t', _recall
