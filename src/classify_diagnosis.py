@@ -75,10 +75,9 @@ if __name__ == '__main__':
     #             lambdas[i] += 1
     #     import pdb; pdb.set_trace()
 
-
+def supperclassify(train_set, train_label, test_set, test_label):
     '''Different methods'''
     train_voted = voting(train_set)
-
     aux = train_voted == train_label
     correct = sum(aux.astype(int))
     _accuracy = (correct * 100) / len(train_label)

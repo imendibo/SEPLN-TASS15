@@ -8,6 +8,8 @@ import classifiers as clf
 import sklearn.cross_validation as cv
 import pandas as pd
 import matplotlib.pyplot as plt
+import classify_diagnosis as diagnose
+import itertools
 
 
 def printResults(accuracy, precision, recall, f_measure, name="Unknown"):
@@ -43,13 +45,13 @@ if __name__ == "__main__":
     # tokenized_train = []
     #
     # for idx, text in train.iterrows():
-    #     # tokenized_train.append(ut.tokenize(text['review'], text['sentiment'])) # for labeledTrainData.tsv
-    #     tokenized_train.append(ut.tokenize(text['Phrase'], text['Sentiment']))   # for train.tsv
+    # # tokenized_train.append(ut.tokenize(text['review'], text['sentiment'])) # for labeledTrainData.tsv
+    # tokenized_train.append(ut.tokenize(text['Phrase'], text['Sentiment']))   # for train.tsv
     #
     # tweets = []
     # labels = []
     # for tweet in tokenized_train:
-    #     tweets.append(tweet['clean'])
+    # tweets.append(tweet['clean'])
     #     labels.append(tweet['class'])
 
     partition = 3
@@ -58,58 +60,67 @@ if __name__ == "__main__":
     #     tweets, labels, partition)
 
     # Second partition
-    validation_tweets, train_tweets, test_tweets, validation_labels, train_labels, test_labels = ut.crossValidation(
+    validation_tweets_, train_tweets_, test_tweets_, validation_labels_, train_labels_, test_labels_ = ut.crossValidation(
         tweets, labels, partition)
 
-    print len(test_tweets)
-    print len(train_tweets)
-    print len(validation_tweets)
+    partition_indexes = np.arange(0, partition)
+    data_partitions = np.array([validation_tweets_, train_tweets_, test_tweets_])
+    label_partitions = np.array([validation_labels_, train_labels_, test_labels_])
 
-    train_tweets = np.hstack(train_tweets)
-    dictionary, tweets_features, vectorizer = bow.bow(train_tweets, vec="tfidf")
-    # dictionary, tweets_features, vectorizer = bow.bow(train_tweets, vec="count")
+    for j in itertools.permutations(partition_indexes):
+
+        validation_tweets, train_tweets, test_tweets = data_partitions[np.array(j)]
+        validation_labels, train_labels, test_labels = label_partitions[np.array(j)]
+
+        # train_tweets = np.hstack(train_tweets)
+        dictionary, tweets_features, vectorizer = bow.bow(train_tweets, vec="tfidf")
+        # dictionary, tweets_features, vectorizer = bow.bow(train_tweets, vec="count")
+        '''
+        Training different classifiers.
+        '''
+        print '\nTraining Classifiers:\n'
+        # forest_cls, svm_cls, rbf_cls, ada_cls, lr_cls = clf.train_classifiers(tweets_features,train_labels)
+        forest_cls, svm_cls, lr_cls, ada_cls = clf.train_classifiers(tweets_features, train_labels)
+        '''
+        Create results dataset from classifiers. Where each attribute is a classifier and each row corresponds to the
+        classification of a tweet according to each classifier.
+
+        '''
+        print '\nCreating Train set for super classifier ... '
+        test_tweet_trans = vectorizer.transform(test_tweets)
+        test_tweet_trans = test_tweet_trans.toarray()
+
+        # classifiers = (forest_cls, svm_cls, rbf_cls, ada_cls, lr_cls)
+        classifiers = (forest_cls, svm_cls, lr_cls, ada_cls)
+        train_results = clf.test_classifiers(test_tweet_trans, test_labels, classifiers)
+
+        '''
+        Train the super classifier on the test set
+        '''
+        print '\nCreating Test set for super classifier ... '
+        val_tweet_trans = vectorizer.transform(validation_tweets)
+        val_tweet_trans = val_tweet_trans.toarray()
+
+        test_results = clf.test_classifiers(val_tweet_trans, validation_labels, classifiers)
+
+        '''
+        Now we have a train_results and test_results. Lets train and test a super classifier
+        '''
+        print '\nTraining super classifier ... '
+        super_clf = clf.rbf_classifier(train_results, test_labels)
+
+        print '\nEvaluating Super classifier ... '
+        results, accuracy, precision, recall, f_measure = clf.evaluateResults(super_clf, test_results,
+                                                                              validation_labels,
+                                                                              estimator_name='Supper Classifier')
+        print '\n\nSuperClassify partition', j, '\n'
+        diagnose.supperclassify(train_results, test_labels, test_results, validation_labels)
 
 
-    '''
-    Training different classifiers.
-    '''
-    print '\nTraining Classifiers:\n'
-    # forest_cls, svm_cls, rbf_cls, ada_cls, lr_cls = clf.train_classifiers(tweets_features,train_labels)
-    forest_cls, svm_cls, lr_cls, ada_cls = clf.train_classifiers(tweets_features,train_labels)
-    '''
-    Create results dataset from classifiers. Where each attribute is a classifier and each row corresponds to the
-    classification of a tweet according to each classifier.
-
-    '''
-    print '\nCreating Train set for super classifier ... '
-    test_tweet_trans = vectorizer.transform(test_tweets)
-    test_tweet_trans = test_tweet_trans.toarray()
-
-    # classifiers = (forest_cls, svm_cls, rbf_cls, ada_cls, lr_cls)
-    classifiers = (forest_cls, svm_cls, lr_cls, ada_cls)
-    train_results = clf.test_classifiers(test_tweet_trans, test_labels, classifiers)
-
-    '''
-    Train the super classifier on the test set
-    '''
-    print '\nCreating Test set for super classifier ... '
-    val_tweet_trans = vectorizer.transform(validation_tweets)
-    val_tweet_trans = val_tweet_trans.toarray()
-
-    test_results = clf.test_classifiers(val_tweet_trans, validation_labels, classifiers)
-
-    '''
-    Now we have a train_results and test_results. Lets train and test a super classifier
-    '''
-    print '\nTraining super classifier ... '
-    super_clf = clf.rbf_classifier(train_results, test_labels)
-
-    print '\nEvaluating Super classifier ... '
-    results, accuracy, precision, recall, f_measure = clf.evaluateResults(super_clf, test_results, validation_labels, estimator_name='Supper Classifier')
-    np.savetxt("train_results_3.csv", train_results, delimiter=",")
-    np.savetxt("train_labels_3.csv", test_labels, delimiter=",")
-    np.savetxt("test_results_3.csv", test_results, delimiter=",")
-    np.savetxt("test_labels_3.csv", validation_labels, delimiter=",")
+    # np.savetxt("train_results_3.csv", train_results, delimiter=",")
+    # np.savetxt("train_labels_3.csv", test_labels, delimiter=",")
+    # np.savetxt("test_results_3.csv", test_results, delimiter=",")
+    # np.savetxt("test_labels_3.csv", validation_labels, delimiter=",")
 
     # import pdb; pdb.set_trace()
 
