@@ -35,7 +35,8 @@ if __name__ == "__main__":
 
     tweets = np.array(tweets)
     labels = np.array(labels)
-    train_tweets, test_tweets, train_labels, test_labels = ut.crossValidation2(tweets, labels, 4)
+
+    train_tweets, test_tweets, train_labels, test_labels = ut.crossValidation2(tweets, labels, 3)
 
 
     # train_tweets = np.hstack(train_tweets)
@@ -106,7 +107,8 @@ if __name__ == "__main__":
 
     v_results = diagnose.voting(SEPLN_results)
 
-    polarity = np.array(['NONE', 'N+', 'N', 'NEU', 'P', 'P+'])
+    # polarity = np.array(['NONE', 'N+', 'N', 'NEU', 'P', 'P+'])
+    polarity = np.array(['NONE', 'N', 'NEU', 'P'])
     w_results = polarity[w_results]
     df = np.vstack([tweetids, w_results])
     df = pd.DataFrame(df.T)
@@ -114,14 +116,18 @@ if __name__ == "__main__":
     df.to_csv('../output/results/normal/partition3_4/weighted_results_tf-idf.txt', sep='\t', index=False, header=False)
 
 
-    polarity = np.array(['NONE', 'N+', 'N', 'NEU', 'P', 'P+'])
+    # polarity = np.array(['NONE', 'N+', 'N', 'NEU', 'P', 'P+'])
+    polarity = np.array(['NONE', 'N', 'NEU', 'P'])
+
     v_results = polarity[v_results]
     df = np.vstack([tweetids, v_results])
     df = pd.DataFrame(df.T)
 
     df.to_csv('../output/results/normal/partition3_4/voted_results_tf-idf.txt', sep='\t', index=False, header=False)
 
-    polarity = np.array(['NONE', 'N+', 'N', 'NEU', 'P', 'P+'])
+    # polarity = np.array(['NONE', 'N+', 'N', 'NEU', 'P', 'P+'])
+    polarity = np.array(['NONE', 'N', 'NEU', 'P'])
+
     rbf_results = polarity[rbf_results]
     df = np.vstack([tweetids, rbf_results])
     df = pd.DataFrame(df.T)
