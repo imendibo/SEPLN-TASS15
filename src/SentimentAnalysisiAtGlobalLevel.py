@@ -50,7 +50,6 @@ if __name__ == "__main__":
     '''
     Create results dataset from classifiers. Where each attribute is a classifier and each row corresponds to the
     classification of a tweet according to each classifier.
-
     '''
 
     print '\nCreating Train set for super classifier ... '
@@ -65,12 +64,14 @@ if __name__ == "__main__":
     Train the super classifier on the test set
     '''
 
-    xmlTrainFile = '../DATA/general-tweets-test.xml'
-    tweets = xml.readXMLTest(xmlTrainFile)
+    xmlTestFile = '../DATA/general-tweets-test.xml'
+    tweets = xml.readXMLTest(xmlTestFile)
 
     tokenized_tweets = []
+    tweetids = []
     for tweet in tweets:
         tokenized_tweets.append(ut.tokenize(tweet.content, tweet.polarity))
+        tweetids.append(tweet.id)
 
     tweets = []
     labels = []
@@ -85,25 +86,42 @@ if __name__ == "__main__":
     val_tweet_trans = vectorizer.transform(tweets_SEPLN)
     val_tweet_trans = val_tweet_trans.toarray()
 
-    SEPLN_results = clf.test_classifiers(val_tweet_trans,0, classifiers)
+    SEPLN_results = clf.test_classifiers(val_tweet_trans, 0, classifiers)
 
     '''
     Now we have a train_results and test_results. Lets train and test a super classifier
     '''
     print '\nTraining super classifier ... '
-    # super_clf = clf.rbf_classifier(train_results, test_labels)
+    super_clf = clf.rbf_classifier(train_results, test_labels)
 
     print '\nEvaluating Super classifier ... '
-    # results, accuracy, precision, recall, f_measure = clf.evaluateResults(super_clf, test_results,
-    #                                                                       validation_labels,
-    #                                                                       estimator_name='Supper Classifier')
+    rbf_results = super_clf.predict(SEPLN_results)
+    # rbf_results, _, _, _, _ = clf.evaluateResults(super_clf, train_results, test_labels)
+    # validation_labels,
+    # estimator_name='Supper Classifier')
     import classify_diagnosis as cd
 
     lambdas = cd.weighted_voting_getlambdas(train_results, test_labels)
-    results = cd.weighted_voting(SEPLN_results, lambdas)
+    w_results = cd.weighted_voting(SEPLN_results, lambdas)
 
+    import pdb;
 
-    print results
+    pdb.set_trace()
+    polarity = np.array(['NONE', 'P+', 'P', 'NEU', 'N', 'N+'])
+    w_results = polarity[w_results]
+    df = np.vstack([tweetids, w_results])
+    df = pd.DataFrame(df.T)
+
+    df.to_csv('weighted_results_tf-idf.txt', sep='\t', index=False, header=False)
+
+    pdb.set_trace()
+    polarity = np.array(['NONE', 'P+', 'P', 'NEU', 'N', 'N+'])
+    rbf_results = polarity[rbf_results]
+    df = np.vstack([tweetids, rbf_results])
+    df = pd.DataFrame(df.T)
+
+    df.to_csv('rbf_results_tf-idf.txt', sep='\t', index=False, header=False)
+
     # diagnose.supperclassify(train_results, test_labels, SEPLN_results, validation_labels)
 
 
