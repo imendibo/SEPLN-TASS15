@@ -119,7 +119,7 @@ if __name__ == "__main__":
     df = np.vstack([tweetids, v_results])
     df = pd.DataFrame(df.T)
 
-    df.to_csv('weighted_results_tf-idf.txt', sep='\t', index=False, header=False)
+    df.to_csv('voted_results_tf-idf.txt', sep='\t', index=False, header=False)
 
     polarity = np.array(['NONE', 'N+', 'N', 'NEU', 'P', 'P+'])
     rbf_results = polarity[rbf_results]
