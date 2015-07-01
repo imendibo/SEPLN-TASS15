@@ -30,6 +30,35 @@ def readXML(xmlFIle):
 
     return tweets
 
+
+
+def readXMLTest(xmlFIle):
+    tree = ET.parse(xmlFIle)
+    root = tree.getroot()
+
+    tweets = []
+
+    for tweet in root.iter('tweet'):
+        content = tweet.find('content').text
+
+        # sentiments = tweet.find('sentiments')
+        # polarity = sentiments[0].find('value').text
+
+        # polarity = polarityTagging(polarity)
+
+        #Other info:
+        tweet_id = long(tweet.find('tweetid').text)
+        user = tweet.find('user').text
+        date = tweet.find('date').text
+        lang = tweet.find('lang').text
+
+        if content != None:
+            tweet = tw.Tweet(tweet_id, user, date, lang, content)
+
+            tweets.append(tweet)
+
+    return tweets
+
 def polarityTagging(polarity):
     if(polarity.__eq__('NONE')):
         polarity = 0

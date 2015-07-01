@@ -33,8 +33,9 @@ if __name__ == "__main__":
         tweets.append(tweet['clean'])
         labels.append(tweet['class'])
 
-    train_tweets = np.array(tweets)
-    train_labels = np.array(labels)
+    tweets = np.array(tweets)
+    labels = np.array(labels)
+    train_tweets, test_tweets, train_labels, test_labels = ut.crossValidation2(tweets, labels, 2)
 
 
     # train_tweets = np.hstack(train_tweets)
@@ -51,6 +52,7 @@ if __name__ == "__main__":
     classification of a tweet according to each classifier.
 
     '''
+
     print '\nCreating Train set for super classifier ... '
     test_tweet_trans = vectorizer.transform(test_tweets)
     test_tweet_trans = test_tweet_trans.toarray()
@@ -62,11 +64,28 @@ if __name__ == "__main__":
     '''
     Train the super classifier on the test set
     '''
+
+    xmlTrainFile = '../DATA/general-tweets-test.xml'
+    tweets = xml.readXML(xmlTrainFile)
+
+    tokenized_tweets = []
+    for tweet in tweets:
+        tokenized_tweets.append(ut.tokenize(tweet.content, tweet.polarity))
+
+    tweets = []
+    labels = []
+    for tweet in tokenized_tweets:
+        tweets.append(tweet['clean'])
+        # labels.append(tweet['class'])
+
+    tweets_SEPLN = np.array(tweets)
+    # labels_SEPLN = np.array(labels)
+
     print '\nCreating Test set for super classifier ... '
-    val_tweet_trans = vectorizer.transform(validation_tweets)
+    val_tweet_trans = vectorizer.transform(tweets_SEPLN)
     val_tweet_trans = val_tweet_trans.toarray()
 
-    test_results = clf.test_classifiers(val_tweet_trans, validation_labels, classifiers)
+    SEPLN_results = clf.test_classifiers(val_tweet_trans, classifiers)
 
     '''
     Now we have a train_results and test_results. Lets train and test a super classifier
@@ -75,11 +94,15 @@ if __name__ == "__main__":
     super_clf = clf.rbf_classifier(train_results, test_labels)
 
     print '\nEvaluating Super classifier ... '
-    results, accuracy, precision, recall, f_measure = clf.evaluateResults(super_clf, test_results,
-                                                                          validation_labels,
-                                                                          estimator_name='Supper Classifier')
-    print '\n\nSuperClassify partition', j, '\n'
-    diagnose.supperclassify(train_results, test_labels, test_results, validation_labels)
+    # results, accuracy, precision, recall, f_measure = clf.evaluateResults(super_clf, test_results,
+    #                                                                       validation_labels,
+    #                                                                       estimator_name='Supper Classifier')
+
+    lambdas = clf.weighted_voting_getlambdas(train_results, test_labels)
+    results = clf.weighted_voting(SEPLN_results, lambdas)
+
+    print results
+    # diagnose.supperclassify(train_results, test_labels, SEPLN_results, validation_labels)
 
 
     # np.savetxt("train_results_3.csv", train_results, delimiter=",")
