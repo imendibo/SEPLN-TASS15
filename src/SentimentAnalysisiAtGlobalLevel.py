@@ -104,32 +104,27 @@ if __name__ == "__main__":
     lambdas = cd.weighted_voting_getlambdas(train_results, test_labels)
     w_results = cd.weighted_voting(SEPLN_results, lambdas)
 
-    import pdb;
+    v_results = diagnose.voting(SEPLN_results)
 
-    pdb.set_trace()
-    polarity = np.array(['NONE', 'P+', 'P', 'NEU', 'N', 'N+'])
+    polarity = np.array(['NONE', 'N+', 'N', 'NEU', 'P', 'P+'])
     w_results = polarity[w_results]
     df = np.vstack([tweetids, w_results])
     df = pd.DataFrame(df.T)
 
     df.to_csv('weighted_results_tf-idf.txt', sep='\t', index=False, header=False)
 
-    pdb.set_trace()
-    polarity = np.array(['NONE', 'P+', 'P', 'NEU', 'N', 'N+'])
+
+    polarity = np.array(['NONE', 'N+', 'N', 'NEU', 'P', 'P+'])
+    v_results = polarity[v_results]
+    df = np.vstack([tweetids, v_results])
+    df = pd.DataFrame(df.T)
+
+    df.to_csv('weighted_results_tf-idf.txt', sep='\t', index=False, header=False)
+
+    polarity = np.array(['NONE', 'N+', 'N', 'NEU', 'P', 'P+'])
     rbf_results = polarity[rbf_results]
     df = np.vstack([tweetids, rbf_results])
     df = pd.DataFrame(df.T)
 
     df.to_csv('rbf_results_tf-idf.txt', sep='\t', index=False, header=False)
 
-    # diagnose.supperclassify(train_results, test_labels, SEPLN_results, validation_labels)
-
-
-    # np.savetxt("train_results_3.csv", train_results, delimiter=",")
-    # np.savetxt("train_labels_3.csv", test_labels, delimiter=",")
-    # np.savetxt("test_results_3.csv", test_results, delimiter=",")
-    # np.savetxt("test_labels_3.csv", validation_labels, delimiter=",")
-
-    # import pdb; pdb.set_trace()
-
-    # printResults(accuracy, precision, recall, f_measure, name="SUPER CLASSIFICATOR")
