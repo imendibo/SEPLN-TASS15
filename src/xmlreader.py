@@ -3,6 +3,7 @@ __author__ = 'Iosu'
 import xml.etree.ElementTree as ET
 import Tweet as tw
 
+
 def readXML(xmlFIle):
     tree = ET.parse(xmlFIle)
     root = tree.getroot()
@@ -18,7 +19,7 @@ def readXML(xmlFIle):
         # polarity = polarityTagging(polarity)
         polarity = polarityTagging3(polarity)
 
-        #Other info:
+        # Other info:
         tweet_id = long(tweet.find('tweetid').text)
         user = tweet.find('user').text
         date = tweet.find('date').text
@@ -30,7 +31,6 @@ def readXML(xmlFIle):
             tweets.append(tweet)
 
     return tweets
-
 
 
 def readXMLTest(xmlFIle):
@@ -47,7 +47,7 @@ def readXMLTest(xmlFIle):
         polatity = 'NONE'
         # polarity = polarityTagging(polarity)
 
-        #Other info:
+        # Other info:
         tweet_id = long(tweet.find('tweetid').text)
         user = tweet.find('user').text
         date = tweet.find('date').text
@@ -60,34 +60,36 @@ def readXMLTest(xmlFIle):
 
     return tweets
 
+
 def polarityTagging(polarity):
-    if(polarity.__eq__('NONE')):
+    if (polarity.__eq__('NONE')):
         polarity = 0
-    elif(polarity.__eq__('N+')):
+    elif (polarity.__eq__('N+')):
         polarity = 1
-    elif(polarity.__eq__('N')):
+    elif (polarity.__eq__('N')):
         polarity = 2
-    elif(polarity.__eq__('NEU')):
+    elif (polarity.__eq__('NEU')):
         polarity = 3
-    elif(polarity.__eq__('P')):
+    elif (polarity.__eq__('P')):
         polarity = 4
-    elif(polarity.__eq__('P+')):
+    elif (polarity.__eq__('P+')):
         polarity = 5
 
     return polarity
 
-def polarityTagging(polarity):
-    if(polarity.__eq__('NONE')):
+
+def polarityTagging3(polarity):
+    if (polarity.__eq__('NONE')):
         polarity = 0
-    elif(polarity.__eq__('N+')):
+    elif (polarity.__eq__('N+')):
         polarity = 1
-    elif(polarity.__eq__('N')):
+    elif (polarity.__eq__('N')):
         polarity = 1
-    elif(polarity.__eq__('NEU')):
+    elif (polarity.__eq__('NEU')):
         polarity = 2
-    elif(polarity.__eq__('P')):
+    elif (polarity.__eq__('P')):
         polarity = 3
-    elif(polarity.__eq__('P+')):
+    elif (polarity.__eq__('P+')):
         polarity = 3
 
     return polarity

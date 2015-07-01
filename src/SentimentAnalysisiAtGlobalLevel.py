@@ -65,7 +65,7 @@ if __name__ == "__main__":
     Train the super classifier on the test set
     '''
 
-    xmlTestFile = '../DATA/general-tweets-test.xml'
+    xmlTestFile = '../DATA/general-tweets-test1k.xml'
     tweets = xml.readXMLTest(xmlTestFile)
 
     tokenized_tweets = []
@@ -113,7 +113,7 @@ if __name__ == "__main__":
     df = np.vstack([tweetids, w_results])
     df = pd.DataFrame(df.T)
 
-    df.to_csv('../output/results/normal/partition3_4/weighted_results_tf-idf.txt', sep='\t', index=False, header=False)
+    df.to_csv('../output/results/1k/partition2_3/weighted_results_tf-idf.txt', sep='\t', index=False, header=False)
 
 
     # polarity = np.array(['NONE', 'N+', 'N', 'NEU', 'P', 'P+'])
@@ -123,7 +123,7 @@ if __name__ == "__main__":
     df = np.vstack([tweetids, v_results])
     df = pd.DataFrame(df.T)
 
-    df.to_csv('../output/results/normal/partition3_4/voted_results_tf-idf.txt', sep='\t', index=False, header=False)
+    df.to_csv('../output/results/1k/partition2_3/voted_results_tf-idf.txt', sep='\t', index=False, header=False)
 
     # polarity = np.array(['NONE', 'N+', 'N', 'NEU', 'P', 'P+'])
     polarity = np.array(['NONE', 'N', 'NEU', 'P'])
@@ -132,5 +132,5 @@ if __name__ == "__main__":
     df = np.vstack([tweetids, rbf_results])
     df = pd.DataFrame(df.T)
 
-    df.to_csv('../output/results/normal/partition3_4/rbf_results_tf-idf.txt', sep='\t', index=False, header=False)
+    df.to_csv('../output/results/1k/partition2_3/rbf_results_tf-idf.txt', sep='\t', index=False, header=False)
 
