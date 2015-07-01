@@ -97,9 +97,10 @@ if __name__ == "__main__":
     # results, accuracy, precision, recall, f_measure = clf.evaluateResults(super_clf, test_results,
     #                                                                       validation_labels,
     #                                                                       estimator_name='Supper Classifier')
+    import classify_diagnosis as cd
 
-    lambdas = clf.weighted_voting_getlambdas(train_results, test_labels)
-    results = clf.weighted_voting(SEPLN_results, lambdas)
+    lambdas = cd.weighted_voting_getlambdas(train_results, test_labels)
+    results = cd.weighted_voting(SEPLN_results, lambdas)
 
 
     print results
