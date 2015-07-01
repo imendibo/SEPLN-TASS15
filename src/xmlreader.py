@@ -43,7 +43,7 @@ def readXMLTest(xmlFIle):
 
         # sentiments = tweet.find('sentiments')
         # polarity = sentiments[0].find('value').text
-
+        polatity = 'NONE'
         # polarity = polarityTagging(polarity)
 
         #Other info:
@@ -53,7 +53,7 @@ def readXMLTest(xmlFIle):
         lang = tweet.find('lang').text
 
         if content != None:
-            tweet = tw.Tweet(tweet_id, user, date, lang, content)
+            tweet = tw.Tweet(tweet_id, user, date, lang, content, polatity)
 
             tweets.append(tweet)
 

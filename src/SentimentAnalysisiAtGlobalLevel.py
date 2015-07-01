@@ -66,7 +66,7 @@ if __name__ == "__main__":
     '''
 
     xmlTrainFile = '../DATA/general-tweets-test.xml'
-    tweets = xml.readXML(xmlTrainFile)
+    tweets = xml.readXMLTest(xmlTrainFile)
 
     tokenized_tweets = []
     for tweet in tweets:
@@ -85,13 +85,13 @@ if __name__ == "__main__":
     val_tweet_trans = vectorizer.transform(tweets_SEPLN)
     val_tweet_trans = val_tweet_trans.toarray()
 
-    SEPLN_results = clf.test_classifiers(val_tweet_trans, classifiers)
+    SEPLN_results = clf.test_classifiers(val_tweet_trans,0, classifiers)
 
     '''
     Now we have a train_results and test_results. Lets train and test a super classifier
     '''
     print '\nTraining super classifier ... '
-    super_clf = clf.rbf_classifier(train_results, test_labels)
+    # super_clf = clf.rbf_classifier(train_results, test_labels)
 
     print '\nEvaluating Super classifier ... '
     # results, accuracy, precision, recall, f_measure = clf.evaluateResults(super_clf, test_results,
@@ -100,6 +100,7 @@ if __name__ == "__main__":
 
     lambdas = clf.weighted_voting_getlambdas(train_results, test_labels)
     results = clf.weighted_voting(SEPLN_results, lambdas)
+
 
     print results
     # diagnose.supperclassify(train_results, test_labels, SEPLN_results, validation_labels)
