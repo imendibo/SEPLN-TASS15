@@ -1,10 +1,14 @@
 __author__ = 'Iosu'
 import re
+
 import numpy as np
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import f1_score
 from sklearn.metrics import precision_recall_fscore_support
 import sklearn.cross_validation as cv
+import matplotlib.pyplot as plt
+from sklearn.preprocessing import normalize
+import xmlreader
 
 
 def tokenize(original_text, label):
@@ -115,26 +119,33 @@ def partition_data(tokenized_tweets, partition):
     return train_tweets, train_labels, test_tweets, test_labels
 
 
-# def plot_confusion_matrix(cm, title='Confusion matrix', cmap=plt.cm.Blues):
-# plt.imshow(cm, interpolation='nearest', cmap=cmap)
-#     plt.title(title)
-#     plt.colorbar()
-#     tick_marks = np.arange(len(iris.target_names))
-#     plt.xticks(tick_marks, iris.target_names, rotation=45)
-#     plt.yticks(tick_marks, iris.target_names)
-#     plt.tight_layout()
-#     plt.ylabel('True label')
-#     plt.xlabel('Predicted label')
+def plot_confusion_matrix(cm, title='Confusion matrix', cmap=plt.cm.Blues, file_name=''):
+    plt.imshow(cm, interpolation='nearest', cmap=cmap)
+    plt.title(title)
+    plt.colorbar()
+    if len(cm) == 4:
+        tick_marks = np.arange(len(cm))
+        tick_labels = [xmlreader.polarityTagging3(x) for x in np.arange(len(cm))]
+
+    else:
+        tick_marks = np.arange(len(cm))
+        tick_labels = [xmlreader.polarityTagging(x) for x in np.arange(len(cm))]
+    # plt.xticks(tick_marks,tick_labels, rotation=45)
+    plt.yticks(tick_marks, tick_labels)
+    plt.tight_layout()
+    plt.ylabel('True label')
+    plt.xlabel('Predicted label')
+    plt.savefig(file_name+title)
 
 
-def get_confusion_matrix(expected, predicted):
+def get_confusion_matrix(expected, predicted, estimator_name, file_name=''):
     cm = confusion_matrix(expected, predicted)
     np.set_printoptions(precision=2)
     # print('Confusion matrix, without normalization')
     # print(cm)
+    plt.figure()
+    plot_confusion_matrix(cm, title=estimator_name, file_name=file_name)
     return cm
-    # plt.figure()
-    # plot_confusion_matrix(cm)
 
 
 def get_f1_measure(expected, predicted):
@@ -165,7 +176,9 @@ def get_measures_for_each_class(expected, predicted):
 
 
 def crossValidation2(tweets, labels, partition):
-    train_tweets, test_tweets, train_labels, test_labels = cv.train_test_split(tweets, labels, test_size=1/float(partition), random_state=0)
+    train_tweets, test_tweets, train_labels, test_labels = cv.train_test_split(tweets, labels,
+                                                                               test_size=1 / float(partition),
+                                                                               random_state=0)
 
     return train_tweets, test_tweets, train_labels, test_labels
 
@@ -177,8 +190,11 @@ def crossValidation(tweets, labels, partition):
     test_labels = []
     train_labels = []
 
-
-    train_tweets, test_tweets, train_labels, test_labels = cv.train_test_split(tweets, labels, test_size=1/float(partition), random_state=0)
-    test_tweets, validation_tweets, test_labels, validation_labels = cv.train_test_split(test_tweets, test_labels, test_size=1/float(2), random_state=0)
+    train_tweets, test_tweets, train_labels, test_labels = cv.train_test_split(tweets, labels,
+                                                                               test_size=1 / float(partition),
+                                                                               random_state=0)
+    test_tweets, validation_tweets, test_labels, validation_labels = cv.train_test_split(test_tweets, test_labels,
+                                                                                         test_size=1 / float(2),
+                                                                                         random_state=0)
 
     return train_tweets, test_tweets, validation_tweets, train_labels, test_labels, validation_labels

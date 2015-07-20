@@ -8,7 +8,7 @@ from sklearn import linear_model
 from sklearn.ensemble import AdaBoostClassifier
 import utils as ut
 import numpy as np
-
+from sklearn.preprocessing import normalize
 
 def classifier_randomForest(features, labels):
     # print "Training the random forest..."
@@ -108,7 +108,7 @@ def test_classifiers(pred, test_labels, classifiers):
     return results
 
 
-def evaluateResults(estimator, test_set, test_labels, estimator_name='Unknown'):
+def evaluateResults(estimator, test_set, test_labels, estimator_name='Unknown', file_name=''):
     result = estimator.predict(test_set)
     # print result
 
@@ -116,7 +116,8 @@ def evaluateResults(estimator, test_set, test_labels, estimator_name='Unknown'):
     correct = sum(aux.astype(int))
     _accuracy = (correct * 100) / len(test_set)
 
-    cm = ut.get_confusion_matrix(test_labels, result)
+    cm = ut.get_confusion_matrix(test_labels, result, estimator_name, file_name=file_name)
+    print '\n'
     _precision, _recall, _f1score, _support = ut.get_measures_for_each_class(test_labels, result)
     print 'Estimator ', estimator_name
     print 'Average Accuracy:\t', _accuracy

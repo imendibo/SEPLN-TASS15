@@ -7,7 +7,6 @@ import utils as ut
 
 
 def voting(train):
-
     train_voted = []
 
     for idx, t in enumerate(train):
@@ -23,16 +22,15 @@ def weighted_voting_getlambdas(train, label):
     normalized_lambdas = []
     results = []
     for i in xrange(0, columns):
-        results.append(train[:,i] == label)
+        results.append(train[:, i] == label)
     for i in xrange(0, columns):
-        lambdas.append(sum(results[i].astype(int))/float(len(label)))
+        lambdas.append(sum(results[i].astype(int)) / float(len(label)))
     for i in xrange(0, len(lambdas)):
-        normalized_lambdas.append(lambdas[i]/float(sum(lambdas)))
+        normalized_lambdas.append(lambdas[i] / float(sum(lambdas)))
     return normalized_lambdas
 
 
 def weighted_voting(test, lambdas):
-
     voted_result = []
 
     for idx, t in enumerate(test):
@@ -54,6 +52,7 @@ def weighted_voting(test, lambdas):
             voted_result.append(aux_label[aux_result.index(max(aux_result))])
     return voted_result
 
+
 if __name__ == '__main__':
     train_file = 'train_results.csv'
     train_set = np.genfromtxt(train_file, delimiter=',')
@@ -70,10 +69,11 @@ if __name__ == '__main__':
     # columns = len(train_set[0])-1
     # lambdas = [columns]
     # for idx, t in enumerate(train_set):
-    #     for i in xrange(0, columns):
+    # for i in xrange(0, columns):
     #         if t[i] == train_label[idx]:
     #             lambdas[i] += 1
     #     import pdb; pdb.set_trace()
+
 
 def supperclassify(train_set, train_label, test_set, test_label):
     '''Different methods'''
